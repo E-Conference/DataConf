@@ -6,38 +6,37 @@
 *   Version: 1.2
 *   Tags:  JSON, Local Storage
 **/
-
-var StorageAnalyser = {
-	
-
-	getMostViewKeyword : function(){
-		keywordStore = StorageManager.get("keyword");
-		var maxOccurKeyword = 0;
-		var maxOccurKeywordLabelTab = [];
-		$.each(keywordStore, function(i,keyword){
-			if(keyword.cpt > maxOccurKeyword){
-				maxOccurKeyword = keyword.cpt;
-			}
-		});
-		$.each(keywordStore, function(i,keyword){
-			if(keyword.cpt == maxOccurKeyword){
-				maxOccurKeywordLabelTab.push(keyword.label);
-			}
-		});
-		return maxOccurKeywordLabelTab;
-	},
-	
-	getMostViewEntity : function(){
-		keywordStore = StorageManager.get("keyword");
-		var maxOccurKeyword = 0;
-		var maxOccurKeywordLabel = "";
-		$.each(keywordStore, function(i,keyword){
-			if(keyword.cpt > maxOccurKeyword){
-				maxOccurKeyword = keyword.cpt;
-				maxOccurKeywordLabel = keyword.label;
-			}
-			
-		});
-	}
-
-};
+define(['jquery', 'underscore', 'localStorage/localStorageAnalyser'], function($, _, StorageManager){
+	var StorageAnalyser = {
+		getMostViewKeyword : function(){
+			keywordStore = StorageManager.get("keyword");
+			var maxOccurKeyword = 0;
+			var maxOccurKeywordLabelTab = [];
+			$.each(keywordStore, function(i,keyword){
+				if(keyword.cpt > maxOccurKeyword){
+					maxOccurKeyword = keyword.cpt;
+				}
+			});
+			$.each(keywordStore, function(i,keyword){
+				if(keyword.cpt == maxOccurKeyword){
+					maxOccurKeywordLabelTab.push(keyword.label);
+				}
+			});
+			return maxOccurKeywordLabelTab;
+		},
+		
+		getMostViewEntity : function(){
+			keywordStore = StorageManager.get("keyword");
+			var maxOccurKeyword = 0;
+			var maxOccurKeywordLabel = "";
+			$.each(keywordStore, function(i,keyword){
+				if(keyword.cpt > maxOccurKeyword){
+					maxOccurKeyword = keyword.cpt;
+					maxOccurKeywordLabel = keyword.label;
+				}
+				
+			});
+		}
+	};
+	return StorageAnalyser;
+});

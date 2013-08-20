@@ -9,80 +9,82 @@
 *   Version: 1.2
 *   Tags:  JSON, SPARQL, AJAX
 **/
- var DDGoCommandStore = {
- 
-	getResultOrganization : {
-		dataType : "JSONP",
-		method : "GET",
-		getQuery : function(parameters){ 
-			var authorName = parameters.name.split("_").join(" ");
-			var  ajaxData = { q : authorName, format : "json",pretty : 1, no_redirect : 1  , output : "json"};
-			return ajaxData ; 
-		},
-		ModelCallBack : function (dataJSON,conferenceUri,datasourceUri, currentUri){
+define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'localStorage/localStorageManager'], function($, _, Encoder, ViewAdapter, ViewAdapterGraph, ViewAdapterText, StorageManager){
+	var DDGoCommandStore = {
+	 
+		getResultOrganization : {
+			dataType : "JSONP",
+			method : "GET",
+			getQuery : function(parameters){ 
+				var authorName = parameters.name.split("_").join(" ");
+				var  ajaxData = { q : authorName, format : "json",pretty : 1, no_redirect : 1  , output : "json"};
+				return ajaxData ; 
+			},
+			ModelCallBack : function (dataJSON,conferenceUri,datasourceUri, currentUri){
 
-			var JSONfile = {};
-			var JSONToken = {};
-			JSONToken.Heading        = dataJSON.Heading;
-			JSONToken.Image          = dataJSON.Image;
-			JSONToken.AbstractText   = dataJSON.AbstractText;
+				var JSONfile = {};
+				var JSONToken = {};
+				JSONToken.Heading        = dataJSON.Heading;
+				JSONToken.Image          = dataJSON.Image;
+				JSONToken.AbstractText   = dataJSON.AbstractText;
+				
+				if( dataJSON.Results.length > 0 ){
+					JSONToken.FirstURL   = dataJSON.Results[0].FirstURL;
+				}
+				JSONfile[0] = JSONToken;
 			
-			if( dataJSON.Results.length > 0 ){
-				JSONToken.FirstURL   = dataJSON.Results[0].FirstURL;
-			}
-			JSONfile[0] = JSONToken;
-		
-			StorageManager.pushCommandToStorage(currentUri,"getResultOrganization",JSONfile);
-			return JSONfile;									
-		},
-		
-		ViewCallBack : function(parameters){
+				StorageManager.pushCommandToStorage(currentUri,"getResultOrganization",JSONfile);
+				return JSONfile;									
+			},
+			
+			ViewCallBack : function(parameters){
 
-			if(parameters.JSONdata != null){
-				var organizationInfo = parameters.JSONdata;
-				if(_.size(organizationInfo) > 0 ){
-					if(ViewAdapter.mode == "text"){
-								  
-						var Heading  = organizationInfo[0].Heading;				
-						var Image  = organizationInfo[0].Image;	
-						var AbstractText  = organizationInfo[0].AbstractText;	
-						var FirstURL  = organizationInfo[0].FirstURL;	
+				if(parameters.JSONdata != null){
+					var organizationInfo = parameters.JSONdata;
+					if(_.size(organizationInfo) > 0 ){
+						if(parameters.mode == "text"){
+									  
+							var Heading  = organizationInfo[0].Heading;				
+							var Image  = organizationInfo[0].Image;	
+							var AbstractText  = organizationInfo[0].AbstractText;	
+							var FirstURL  = organizationInfo[0].FirstURL;	
+							
 						
-					
-						if(Heading != ""){  
-							parameters.contentEl.append('<img src="'+Image+'">');
-						} 
-						if(Image != ""){ 
-							parameters.contentEl.append('<p>'+Heading+'</p>'); 
-						}
-						if(AbstractText != ""){ 
- 							parameters.contentEl.append('<h2>Abstract</h2>');
-							parameters.contentEl.append('<p>'+AbstractText+'</p>'); 
-						}
-						if(FirstURL !== undefined){ 
- 							parameters.contentEl.append('<h2>Homepage</h2>');
-							parameters.contentEl.append('<a href="'+FirstURL+'">'+FirstURL+'</a>'); 
-						}
-					}else{
-					 
-					 var AbstractText  = organizationInfo[0].AbstractText;	
-						var FirstURL  = organizationInfo[0].FirstURL;	
+							if(Heading != ""){  
+								parameters.contentEl.append('<img src="'+Image+'">');
+							} 
+							if(Image != ""){ 
+								parameters.contentEl.append('<p>'+Heading+'</p>'); 
+							}
+							if(AbstractText != ""){ 
+	 							parameters.contentEl.append('<h2>Abstract</h2>');
+								parameters.contentEl.append('<p>'+AbstractText+'</p>'); 
+							}
+							if(FirstURL !== undefined){ 
+	 							parameters.contentEl.append('<h2>Homepage</h2>');
+								parameters.contentEl.append('<a href="'+FirstURL+'">'+FirstURL+'</a>'); 
+							}
+						}else{
+						 
+						 var AbstractText  = organizationInfo[0].AbstractText;	
+							var FirstURL  = organizationInfo[0].FirstURL;	
+							
+						 	if(AbstractText != ""){ 
+								ViewAdapterGraph.addLeaf("Abstract :"+AbstractText);
+							}
+							if(FirstURL !== undefined){ 
+								ViewAdapterGraph.addLeaf("Homepage :"+FirstURL);
+							}
 						
-					 	if(AbstractText != ""){ 
-							ViewAdapter.Graph.addLeaf("Abstract :"+AbstractText);
 						}
-						if(FirstURL !== undefined){ 
-							ViewAdapter.Graph.addLeaf("Homepage :"+FirstURL);
-						}
-					
 					}
 				}
+			
 			}
-		
-		}
-	},      
-
-};//End DDGoCommandStore file
+		},      
+	};
+	return DDGoCommandStore;
+});
 
 
    

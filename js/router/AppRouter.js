@@ -12,121 +12,124 @@
 *	Version: 1.2				   
 *   Tags:  BACKBONE, AJAX, ROUTING
 **/
-AppRouter = Backbone.Router.extend({
+define(['backbone', 'jquery', 'config', 'encoder', 'localStorage/localStorageManager', 'view/viewAdapter', 'reasoner', 'ajaxLoader'], function(Backbone, $, configuration, Encoder, StorageManager, ViewAdapter, Reasoner, AjaxLoader){
 
-	/** Initialization function, launched at the start of the application.
-	*	It reads the configuration file and prepare all the routes and their action it will use on runtime
-	*/
-	initialize: function (options){
-		var self = this;
-		//Catching configuration file in parameters
-		this.configuration = options.configuration;
+	AppRouter = Backbone.Router.extend({
+
+		/** Initialization function, launched at the start of the application.
+		*	It reads the configuration file and prepare all the routes and their action it will use on runtime
+		*/
+		initialize: function (options){
+			var self = this;
+			
+			//Saving the conference definition
+			this.conference = configuration.conference;
+			//Saving the datasources definition
+			this.datasources = configuration.datasources;
+			//Saving the routes definition
+			this.routes = configuration.routes; 
+
+			$.each(this.datasources,function(i,datasourceItem){
+				console.log("******* DATASOURCE ********");
+				console.log(datasourceItem);
+			});
+
 		
-		//Saving the conference definition
-		this.conference = this.configuration.conference;
-		//Saving the datasources definition
-		this.datasources = this.configuration.datasources;
-		//Saving the routes definition
-		this.routes = this.configuration.routes; 
-
-		$.each(this.datasources,function(i,datasourceItem){
-			console.log("******* DATASOURCE ********");
-			console.log(datasourceItem);
-		});
-
-	
-		//Initialize storage manager
-		StorageManager.initialize();
-		//Initialize ViewAdapter to text mode
-		ViewAdapter.initialize("text");
-		//Initialize Reasonner with the keywords ontology
-		Reasoner.initialize();
+			//Initialize storage manager
+			StorageManager.initialize();
+			//Initialize ViewAdapter to text mode
+			ViewAdapter.initialize("text");
+			//Initialize Reasonner with the keywords ontology
+			//Reasoner.initialize();
+			
+			//Initialize ajax Loader 
+			AjaxLoader.initialize(ViewAdapter);
 		
-	
-		//Preparing all the routes and their actions
-		$.each(this.routes,function(i,routeItem){
-			
-			console.log("******* ROUTE ********");
-			console.log(routeItem);
-			
-			
-			//Preparing the function to use when catching the current route
-			self.route(routeItem.hash, function(name, uri) {
-					
-	
-				var title = "";
-				if(name !== undefined){
-					name = Encoder.decode(name);
-					title = name;
-				}
-				if(uri == undefined){
-					title = routeItem.title;	
-					uri = name;
-				}else{
-					uri = Encoder.decode(uri);
-				}
+			//Preparing all the routes and their actions
+			$.each(this.routes,function(i,routeItem){
 				
-				if(name == undefined && uri == undefined){
-					uri = self.conference.baseUri;
-				}
-				 
-				//Appending button and keeping track of new route in case the mode changes
-				var currentPage = ViewAdapter.update(routeItem ,title, self.conference, self.datasources,uri,name); 
+				console.log("******* ROUTE ********");
+				console.log(routeItem);
 				
-				//We try if informations are in the local storage before call getQuery and executeCommand
-				var JSONdata = StorageManager.pullCommandFromStorage(uri);
-			  
-				//Prepare AJAX call according to the commands declared
-				$.each(routeItem.commands,function(i,commandItem){
 				
-					var currentDatasource = self.datasources[commandItem.datasource];
-					var currentCommand    = currentDatasource.commands[commandItem.name];
-					
-					if(currentDatasource.uri == "local"){
-						$("#textHeader > h1").html(uri);
-						var doRequest = true;
-						if(JSONdata != null){
-							if(JSONdata.hasOwnProperty(commandItem.name)){
-								doRequest = false;
-								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name),currentUri : uri});
-							}
-						}
-						if(doRequest){
-							currentCommand.ModelCallBack({contentEl : "#"+commandItem.name,currentUri : uri});
-						}
+				//Preparing the function to use when catching the current route
+				self.route(routeItem.hash, function(name, uri) {
+
+					var title = "";
+					if(name !== undefined){
+						name = Encoder.decode(name);
+						title = name;
+					}
+					if(uri == undefined){
+						title = routeItem.title;	
+						uri = name;
 					}else{
-						var doRequest = true;
-						if(JSONdata != null){
-							if(JSONdata.hasOwnProperty(commandItem.name)){
-								doRequest = false;
-								console.log("CAll : "+commandItem.name+" ON Storage");
-								//Informations already exists so we directly call the command callBack view to render them 
-								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name});
+						uri = Encoder.decode(uri);
+					}
+					
+					if(name == undefined && uri == undefined){
+						uri = self.conference.baseUri;
+					}
+					 
+					//Appending button and keeping track of new route in case the mode changes
+					var currentPage = ViewAdapter.update(routeItem ,title, self.conference, self.datasources,uri,name); 
+					
+					//We try if informations are in the local storage before call getQuery and executeCommand
+					var JSONdata = StorageManager.pullCommandFromStorage(uri);
+				  
+					//Prepare AJAX call according to the commands declared
+					$.each(routeItem.commands,function(i,commandItem){
+					
+						var currentDatasource = self.datasources[commandItem.datasource];
+						var currentCommand    = currentDatasource.commands[commandItem.name];
+						
+						if(currentDatasource.uri == "local"){
+							$("#textHeader > h1").html(uri);
+							var doRequest = true;
+							if(JSONdata != null){
+								if(JSONdata.hasOwnProperty(commandItem.name)){
+									doRequest = false;
+									currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name),currentUri : uri});
+								}
+							}
+							if(doRequest){
+								currentCommand.ModelCallBack({contentEl : "#"+commandItem.name,currentUri : uri});
+							}
+						}else{
+							var doRequest = true;
+							if(JSONdata != null){
+								if(JSONdata.hasOwnProperty(commandItem.name)){
+									doRequest = false;
+									console.log("CAll : "+commandItem.name+" ON Storage");
+									//Informations already exists so we directly call the command callBack view to render them 
+									currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name, mode : ViewAdapter.mode});
+									
+								}
+							}
+							if(doRequest){
+								console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
+								//Retrieveing the query built by the command function "getQuery"
+								var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri,datasource : currentDatasource, name : name, conference : self.conference})
+								//Preparing Ajax call 
+
+								if(ajaxData != null){
+									AjaxLoader.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name), name : name, conference : self.conference});
+								}
+								
 								
 							}
+						
 						}
-						if(doRequest){
-							console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
-							//Retrieveing the query built by the command function "getQuery"
-							var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri,datasource : currentDatasource, name : name, conference : self.conference})
-							//Preparing Ajax call 
+					});
 
-							if(ajaxData != null){
-								AjaxLoader.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name), name : name, conference : self.conference});
-							}
-							
-							
-						}
+					ViewAdapter.generateJQMobileElement();
 					
-					}
+					
 				});
-				
-				ViewAdapter.generateJQMobileElement();
-				
-				
 			});
-		});
 
-	},
+		},
 
+	});
+ 	return AppRouter;
 });

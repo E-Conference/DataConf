@@ -10,45 +10,45 @@ ions on. After calling a command, the results are parsed with it own callback fu
 *   Version: 1.2
 *   Tags:  JSON, AJAX
 **/
- var GoogleCommandStore = {
+define(['jquery', 'underscore', 'encoder', 'view/ViewAdapter', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'localStorage/localStorageManager'], function($, _, Encoder, ViewAdapter, ViewAdapterGraph, ViewAdapterText, StorageManager){
+	 var GoogleCommandStore = {
 
-	/** Command used to get and display the most probable homepage of a given author**/
-	getAuthorPersonalPage : {
-		dataType : "JSONP",
-		method : "GET",
-		getQuery : function(parameters){ 
-			var searchValue = parameters.name;
-			var  ajaxData = { q : searchValue, v : "1.0" };
-			return ajaxData ; 
-		},
-		ModelCallBack : function (dataJSON,conferenceUri,datasourceUri, currentUri){									
-			var JSONfile   = {};
-			var JSONToken  = {};
-			JSONToken.authorHomepage  = dataJSON.responseData.results[0].url;
-			JSONfile[0] = JSONToken;
-			StorageManager.pushCommandToStorage(currentUri,"getAuthorPersonalPage",JSONfile);		
-			return JSONfile;
-		},
-		
-		ViewCallBack : function(parameters){
-			if(parameters.JSONdata != null){
-				var authorHomepage = parameters.JSONdata;
-				if(_.size(authorHomepage) > 0 ){		  
-					if(ViewAdapter.mode == "text"){
-						var homepageUrl  = authorHomepage[0].authorHomepage;
-						parameters.contentEl.append('<h2>Personal Page</h2>');	
-						parameters.contentEl.append('<a href="'+homepageUrl+'" >'+homepageUrl+'</a>');	
-					}else{
-						var homepageUrl  = authorHomepage[0].authorHomepage;
-						ViewAdapter.Graph.addNode("Personnal page : "+homepageUrl, homepageUrl);
-					
+		/** Command used to get and display the most probable homepage of a given author**/
+		getAuthorPersonalPage : {
+			dataType : "JSONP",
+			method : "GET",
+			getQuery : function(parameters){ 
+				var searchValue = parameters.name;
+				var  ajaxData = { q : searchValue, v : "1.0" };
+				return ajaxData ; 
+			},
+			ModelCallBack : function (dataJSON,conferenceUri,datasourceUri, currentUri){									
+				var JSONfile   = {};
+				var JSONToken  = {};
+				JSONToken.authorHomepage  = dataJSON.responseData.results[0].url;
+				JSONfile[0] = JSONToken;
+				StorageManager.pushCommandToStorage(currentUri,"getAuthorPersonalPage",JSONfile);		
+				return JSONfile;
+			},
+			
+			ViewCallBack : function(parameters){
+				if(parameters.JSONdata != null){
+					var authorHomepage = parameters.JSONdata;
+					if(_.size(authorHomepage) > 0 ){		  
+						if(parameters.mode == "text"){
+							var homepageUrl  = authorHomepage[0].authorHomepage;
+							parameters.contentEl.append('<h2>Personal Page</h2>');	
+							parameters.contentEl.append('<a href="'+homepageUrl+'" >'+homepageUrl+'</a>');	
+						}else{
+							var homepageUrl  = authorHomepage[0].authorHomepage;
+							ViewAdapterGraph.addNode("Personnal page : "+homepageUrl, homepageUrl);
+						
+						}
 					}
 				}
 			}
 		}
-	}
-
-};//End GoogleCommandStore file
-
-
+	};
+	return GoogleCommandStore;
+});
    

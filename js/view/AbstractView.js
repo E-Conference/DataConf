@@ -8,35 +8,35 @@
 *	 Version: 1.2		   
 *   Tags:  TEMPLATE
 **/
-var AbstractView = Backbone.View.extend({
-
-	/** Compilation of the templates **/
-	initialize: function (options){
-	
-		this.title = options.title;
-
-		this.model = options.model;
-	
-		this.headerTpl = _.template(tpl.get("header"));
-		this.navBarTpl = _.template(tpl.get("navBar"));
+define(['jquery', 'underscore', 'tpl'], function($, _, tpl){
+	var AbstractView = Backbone.View.extend({
+		/** Compilation of the templates **/
+		initialize: function (options){
 		
-		this.templateName = options.templateName;
+			this.title = options.title;
+
+			this.model = options.model;
 		
-		if(tpl.get(this.templateName)!== undefined){
-			this.contentTpl = _.template(tpl.get(this.templateName));
-		}else{
-			this.contentTpl =  _.template('<article><section class="content"></section></article>');
+			this.headerTpl = _.template(tpl.get("header"));
+			this.navBarTpl = _.template(tpl.get("navBar"));
+			
+			this.templateName = options.templateName;
+			
+			if(tpl.get(this.templateName)!== undefined){
+				this.contentTpl = _.template(tpl.get(this.templateName));
+			}else{
+				this.contentTpl =  _.template('<article><section class="content"></section></article>');
+			}
+			this.footerTpl = _.template(tpl.get("footer"));
+		},
+
+		/** Rendering of the templates **/
+		render: function(){
+			$(this.el).append(this.headerTpl({conference : this.model, title : this.title} ));
+			$(this.el).append(this.navBarTpl());
+			$(this.el).append(this.contentTpl({conference : this.model}));
+			$(this.el).append(this.footerTpl({conference : this.model}));
 		}
-		
-		this.footerTpl = _.template(tpl.get("footer"));
-	},
-
-	/** Rendering of the templates **/
-	render: function(){
-		$(this.el).append(this.headerTpl({conference : this.model, title : this.title} ));
-		$(this.el).append(this.navBarTpl());
-		$(this.el).append(this.contentTpl({conference : this.model}));
-		$(this.el).append(this.footerTpl({conference : this.model}));
-	}
-
+	});
+	return AbstractView;
 });

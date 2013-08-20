@@ -8,98 +8,99 @@
 *   Version: 1.2
 *   Tags:  JSON, Local Storage
 **/
+define(['jquery', 'underscore', 'jStorage'], function($, _, jStorage){
+	var StorageManager = {
 
-var StorageManager = {
-
-	initialize : function(){
-		if(!$.jStorage.storageAvailable()){
-			this.commandStore = [];
-	    }
-		if(!StorageManager.get("keyword")){
-			StorageManager.set("keyword",{});
-		}
-		this.maxSize = 50;
-
-	},
-	
-	pushCommandToStorage : function (uri,commandName, JSONdata){
-		var dataContainer = StorageManager.get(uri);
-		
-		if(dataContainer != null){
-			if(!dataContainer.hasOwnProperty(commandName)){
-				dataContainer[commandName] = JSONdata;
-				StorageManager.controlSize();
-				StorageManager.set(uri,dataContainer);
+		initialize : function(){
+			if(!$.jStorage.storageAvailable()){
+				this.commandStore = [];
+		    }
+			if(!StorageManager.get("keyword")){
+				StorageManager.set("keyword",{});
 			}
-		}else{
-			var newElement = {};
-			newElement[commandName] = JSONdata;
-			newElement.cpt = 0;
-			StorageManager.set(uri,newElement);
-		}
-	},
-	pullCommandFromStorage : function (uri){
-		var dataContainer = StorageManager.get(uri);
-		if(dataContainer != null){
-			dataContainer.cpt +=1;
-			return dataContainer;
-		}else{
-		    return null;
-		}
-	},
-	pushKeywordToStorage : function (keyword){
-		var dataContainer = StorageManager.get("keyword");
+			this.maxSize = 50;
+		},
 		
-		if(dataContainer != null){
-			if(!dataContainer.hasOwnProperty(keyword)){
-				dataContainer[keyword] = {};
-				dataContainer[keyword].cpt = 0;
-				dataContainer[keyword].label = keyword;
-				
+		pushCommandToStorage : function (uri,commandName, JSONdata){
+			var dataContainer = StorageManager.get(uri);
+			
+			if(dataContainer != null){
+				if(!dataContainer.hasOwnProperty(commandName)){
+					dataContainer[commandName] = JSONdata;
+					StorageManager.controlSize();
+					StorageManager.set(uri,dataContainer);
+				}
 			}else{
-				dataContainer[keyword].cpt += 1;
+				var newElement = {};
+				newElement[commandName] = JSONdata;
+				newElement.cpt = 0;
+				StorageManager.set(uri,newElement);
 			}
-			StorageManager.set("keyword",dataContainer);
-		}
-	},
-	pullKeywordFromStorage : function (){
-		var dataContainer = StorageManager.get("keyword");
-		if(dataContainer != null){
-			return keyword;
-		}else{
-		    return null;
+		},
+		pullCommandFromStorage : function (uri){
+			var dataContainer = StorageManager.get(uri);
+			if(dataContainer != null){
+				dataContainer.cpt +=1;
+				return dataContainer;
+			}else{
+			    return null;
+			}
+		},
+		pushKeywordToStorage : function (keyword){
+			var dataContainer = StorageManager.get("keyword");
+			
+			if(dataContainer != null){
+				if(!dataContainer.hasOwnProperty(keyword)){
+					dataContainer[keyword] = {};
+					dataContainer[keyword].cpt = 0;
+					dataContainer[keyword].label = keyword;
+					
+				}else{
+					dataContainer[keyword].cpt += 1;
+				}
+				StorageManager.set("keyword",dataContainer);
+			}
+		},
+		pullKeywordFromStorage : function (){
+			var dataContainer = StorageManager.get("keyword");
+			if(dataContainer != null){
+				return keyword;
+			}else{
+			    return null;
+			}
+			
+		},
+		
+		set : function(key,dataContainer){
+			if(this.commandStore !== undefined){
+				this.commandStore[key] = dataContainer;
+			}else{
+				$.jStorage.set(key,JSON.stringify(dataContainer));
+			}
+		},
+		get : function(key){
+			if(this.commandStore !== undefined){
+				return this.commandStore[key];
+			}else{
+				return JSON.parse($.jStorage.get(key));
+			}
+		},
+		controlSize : function (){
+			if(this.commandStore !== undefined){
+				if(_.size(this.commandStore) > this.maxSize ){
+					StorageManager.initialize();
+				}
+			}else{
+				if($.jStorage.index().length > this.maxSize ){
+					$.jStorage.flush();
+					StorageManager.initialize();
+				}
+			}
 		}
 		
-	},
-	
-	set : function(key,dataContainer){
-		if(this.commandStore !== undefined){
-			this.commandStore[key] = dataContainer;
-		}else{
-			$.jStorage.set(key,JSON.stringify(dataContainer));
-		}
-	},
-	get : function(key){
-		if(this.commandStore !== undefined){
-			return this.commandStore[key];
-		}else{
-			return JSON.parse($.jStorage.get(key));
-		}
-	},
-	controlSize : function (){
-		if(this.commandStore !== undefined){
-			if(_.size(this.commandStore) > this.maxSize ){
-				StorageManager.initialize();
-			}
-		}else{
-			if($.jStorage.index().length > this.maxSize ){
-				$.jStorage.flush();
-				StorageManager.initialize();
-			}
-		}
-	}
-	
-};
+	};
+	return StorageManager;
+});
 
 
 

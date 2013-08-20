@@ -6,69 +6,72 @@
 *   Version: 1.2
 *   Tags:  MOBIL-REASONING, WEB WORKERS
 **/
-
-var Reasoner = {
+define(['jquery', 'underscore','reasonerWorker'], function($, _, reasonerWorker){
 	
-	startWorker : function(){
-	
-		worker=new Worker("js/reasoner/ReasonerWorker.js");
+	var Reasoner = {
 		
-		worker.onmessage=function(event){
-			console.log(event);
-			console.log(event.data.results);
+		startWorker : function(){
 		
-			if(event.data.callback != undefined){
-				var callback;
-				try {
-					callback = eval(event.data.callback);
-				} catch (ex) {
-					callback = eval("(" + event.data.callback + ")");
+			worker = new Worker(reasonerWorker);
+			
+			worker.onmessage=function(event){
+				console.log(event);
+				console.log(event.data.results);
+			
+				if(event.data.callback != undefined){
+					var callback;
+					try {
+						callback = eval(event.data.callback);
+					} catch (ex) {
+						callback = eval("(" + event.data.callback + ")");
+					}
+					callback(event.data.results,JSON.parse(event.data.param));
 				}
-				callback(event.data.results,JSON.parse(event.data.param));
-			}
-		};
-	},
-	stopWorker : function () {
-		worker.terminate();
-	},
-	sendRequest : function (queryString,keyword,parameters,fCallback){
-		var callbackString = fCallback.toString();
-		var parameterString = JSON.stringify(parameters);
-		
-		
-		worker.postMessage({command: "process", text: queryString,keyword:keyword,param: parameterString, callback: callbackString});
-		
-	},
-	initReasoner : function(){
-		$.ajax({
-			url: "js/reasoner/reasonerData.json",
-			success:function(result){
-				worker.postMessage({command: "start", text: result});
-			},
-			error : function(jqXHR, exception, erorThrown){
-				console.log( erorThrown);
-			}
-		});
-	},
-    initialize : function(){	
-		Reasoner.startWorker();
-		Reasoner.initReasoner();
-		
-    },
+			};
+		},
+		stopWorker : function () {
+			worker.terminate();
+		},
+		sendRequest : function (queryString,keyword,parameters,fCallback){
+			var callbackString = fCallback.toString();
+			var parameterString = JSON.stringify(parameters);
+			
+			
+			worker.postMessage({command: "process", text: queryString,keyword:keyword,param: parameterString, callback: callbackString});
+			
+		},
+		initReasoner : function(){
+			$.ajax({
+				url: "js/reasoner/reasonerData.json",
+				success:function(result){
+					worker.postMessage({command: "start", text: result});
+				},
+				error : function(jqXHR, exception, erorThrown){
+					console.log( erorThrown);
+				}
+			});
+		},
+	    initialize : function(){	
+			Reasoner.startWorker();
+			Reasoner.initReasoner();
+			
+	    },
 
-	filterResult : function (keywordLabel, resultLabel){
-		console.log(resultLabel);
-		if(resultLabel == "http://www.w3.org/2002/07/owlThing" || resultLabel == "http://www.w3.org/2002/07/owl#Thing" || resultLabel =="http://proton.semanticweb.org/2005/04/protontObject" || resultLabel == keywordLabel || resultLabel == "http://proton.semanticweb.org/2005/04/protont#Object"){
-			return false;
+		filterResult : function (keywordLabel, resultLabel){
+			console.log(resultLabel);
+			if(resultLabel == "http://www.w3.org/2002/07/owlThing" || resultLabel == "http://www.w3.org/2002/07/owl#Thing" || resultLabel =="http://proton.semanticweb.org/2005/04/protontObject" || resultLabel == keywordLabel || resultLabel == "http://proton.semanticweb.org/2005/04/protont#Object"){
+				return false;
+			}
+			return true;
+		},
+		labelToUri:function(keywordLabel){
+			return "#"+keywordLabel.split(" ").join("_");
+		},
+		
+		UriToLabel:function(keywordUri){
+			return keywordUri.replace('#','').split("_").join(" ");
 		}
-		return true;
-	},
-	labelToUri:function(keywordLabel){
-		return "#"+keywordLabel.split(" ").join("_");
-	},
-	
-	UriToLabel:function(keywordUri){
-		return keywordUri.replace('#','').split("_").join(" ");
+		
 	}
-	
-}
+	return Reasoner;
+});

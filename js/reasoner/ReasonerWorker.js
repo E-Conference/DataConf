@@ -7,23 +7,27 @@
 *   Tags:  WEB WORKERS, DEDICATED WORKER
 **/
 
-importScripts('processOntology.js');
-importScripts('jsw.js', 'query.js', 'util-min.js', 'jswui.js');
+/*importScripts('processOntology.js');
+importScripts('jsw.js', 'query.js', 'util-min.js', 'jswui.js');*/
 
-/**
-* Convenient caller for the showResult function
-* only change the function call for a postMerssage call when moving it in the worker
-*/
-function send(data) {
-	postMessage(data);
-}
+define({basePath:"./lib"},['processOntoloy','jsw', 'query', 'utilMin', 'jswui' ], function(ontologyProcessor, jsw, query, utilMin, jswui){
+	var  workerInterface = {
+		/**
+		* Convenient caller for the showResult function
+		* only change the function call for a postMerssage call when moving it in the worker
+		*/
+		
+		send : function(data) {
+			postMessage(data);
+		},
 
-send("Worker started");
-
-self.onmessage = function(event) {
-	if(event.data.command === "start") {
-		startReasoner(event.data.text);
-	} else if(event.data.command === "process") {
-		queryReasoner({queryString :event.data.text,keyword : event.data.keyword,param: event.data.param, callback : event.data.callback});
+		onmessage : function(event) {
+			if(event.data.command === "start") {
+				ontologyProcessor.startReasoner(event.data.text);
+			} else if(event.data.command === "process") {
+				ontologyProcessor.queryReasoner({queryString :event.data.text,keyword : event.data.keyword,param: event.data.param, callback : event.data.callback});
+			}
+		}
 	}
-}
+	return workerInterface;
+});
