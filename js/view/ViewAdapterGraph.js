@@ -6,7 +6,7 @@
 *   Version: 1.2
 *   Tags:  Backbone Jquery-ui-mobile Adapter Linked-Data Graph html5 canvas
 **/
-define(['jquery', 'underscore', 'arbor'], function($, _, arbor){
+define(['jquery', 'underscore', 'arbor', 'renderer'], function($, _, arbor, Renderer){
 	var ViewAdapterGraph = { 
 	   
 	    rootNodeUri : '',

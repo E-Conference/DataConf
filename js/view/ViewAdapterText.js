@@ -83,13 +83,10 @@ define(['jquery', 'arbor'], function($, arbor){
 		},
 		
 		appendListCollapsible : function(dataList,href,labelProperty,appendToDiv,option){
-
-
 			var list =$('<ul data-role="listview"  data-autodividers="true" data-filter="true" data-shadow="false" data-filter-placeholder="filter ..." > </div>');
 			var form = $('<form class="ui-listview-filter" role"search">');
 			form.appendTo(appendToDiv);
 			list.appendTo(appendToDiv);
-			
 			
 			$.each(dataList, function(i,currentData){
 				

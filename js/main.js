@@ -16,7 +16,7 @@ require.config({
         },
         'jqueryMobile.config': {
         	deps: [
-                'jquery',
+                'jquery'
             ],
         },
 		'underscore': {
@@ -24,7 +24,8 @@ require.config({
 		},
 		'arbor':{
 			deps : [
-				'jquery'
+				'jquery',
+				'arbor-graphics'
 			],
 			exports: 'arbor'
 		},
@@ -49,6 +50,8 @@ require.config({
 		'utilsMin' : 'reasoner/utils-min',
 		'reasoner' : 'reasoner/Reasoner',
 		'reasonerWorker' : 'reasoner/ReasonerWorker',
+		'renderer' : 'view/arborGraph',
+		'arbor-graphics' : 'lib/arbor-graphics',
 		'arbor': 'lib/arbor',
 		'encoder': 'lib/encoder',
 		'blob': 'lib/blob',

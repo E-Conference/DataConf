@@ -7,7 +7,7 @@
 *   Version: 1.2
 *   Tags:  arborjs   
 **/
-define(['jquery', 'jqueryMobile','arbor', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'view/AbstractView'], function($, jqueryMobile, arbor, ViewAdapterGraph, ViewAdapterText, AbstractView){
+define(['jquery', 'jqueryMobile','arbor', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'view/AbstractView', 'localStorage/localStorageManager'], function($, jqueryMobile, arbor, ViewAdapterGraph, ViewAdapterText, AbstractView, StorageManager){
 	var ViewAdapter = {
 
 		initialize : function(mode){
@@ -78,12 +78,13 @@ define(['jquery', 'jqueryMobile','arbor', 'view/ViewAdapterGraph', 'view/ViewAda
 			switchViewBtn.css("z-index","20"); 
 			switchViewBtn.trigger("create");
 
+			var self = this;
 			switchViewBtn.click(function(){  
-				this.changeMode();
+				self.changeMode();
 			});
 		},
 		changeMode : function(){
-		
+			
 			if(this.mode == "text"){
 				this.mode = "graph";
 			}else{
@@ -93,13 +94,13 @@ define(['jquery', 'jqueryMobile','arbor', 'view/ViewAdapterGraph', 'view/ViewAda
 			this.initPage(this.graphView);
 			
 			var JSONdata = StorageManager.pullCommandFromStorage(this.uri);
-			$.each(this.commands,function(i,commandItem){
-			
+			_.each(this.commands,function(commandItem,i){
+
 				var currentDatasource = this.datasources[commandItem.datasource];
 				var currentCommand    = currentDatasource.commands[commandItem.name];
 				if(JSONdata != null){
 					if(JSONdata.hasOwnProperty(commandItem.name)){
-						currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name],contentEl : this.currentPage.find("#"+commandItem.name), name : this.name, currentUri : this.uri});
+						currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name],contentEl : this.currentPage.find("#"+commandItem.name), name : this.name, currentUri : this.uri, mode : ViewAdapter.mode });
 					}
 				}else{
 					var ajaxData   = currentCommand.getQuery({conferenceUri : this.conference.baseUri, uri : this.uri,datasource : currentDatasource, name : name, conference : this.conference});

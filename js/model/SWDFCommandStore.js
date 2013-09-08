@@ -489,7 +489,7 @@ var SWDFCommandStore = {
 		},
 		
 		ViewCallBack : function(parameters){
-			
+			debugger;
 			if(parameters.JSONdata != null ){
 				var publicationInfo = parameters.JSONdata;
 				if(_.size(publicationInfo) > 0 ){

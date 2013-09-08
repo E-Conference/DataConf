@@ -49,8 +49,8 @@ header{
 
 nav  .ui-btn-inner:hover{
 	
-	background : #333!important;
-	color :#bf1278!important;
+	background : #F06E50!important;
+	color:#F06E50;
 }
 
 nav  .ui-btn-inner{
@@ -107,12 +107,13 @@ a, span {
 
 //Special buttons
 a .swtich{
-	background : #9fc3db!important;
+	background : #b0ca0f!important;
+}
+.ui-btn-up-b{
+	background : #444!important;
 }
 
- .ui-btn-inner:hover{
-	color :#de4129!important;
- }
+
 
 .ui-btn-text{
 	padding-top : 0em!important;
@@ -140,6 +141,7 @@ a .swtich{
 #getConferenceSchedule .ui-btn-inner{
 	padding-top : 0!important;
 	padding-bottom : 0!important;
+	
 
 }
 

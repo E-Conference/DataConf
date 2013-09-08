@@ -7,6 +7,7 @@
 *   Tags:  Backbone Jquery-ui-mobile Adapter Linked-Data Graph html5 canvas
 **/
 define(['jquery', 'arbor'], function($, arbor){
+	debugger;
 	var ViewAdapterGraph = { 
 	   
 	    rootNodeUri : '',
@@ -25,6 +26,7 @@ define(['jquery', 'arbor'], function($, arbor){
 		* rootNodeUri : The current root node in use
 		**/
 	    initContainer : function(el,rootNodeUri,rootNodeLabel){
+	    	debugger;
 			ViewAdapterGraph["nodeCounter"]=0;
 			ViewAdapterGraph.el=el;
 
