@@ -12,7 +12,7 @@
 *	Version: 1.2				   
 *   Tags:  BACKBONE, AJAX, ROUTING
 **/
-define(['backbone', 'jquery', 'config', 'encoder', 'localStorage/localStorageManager', 'view/viewAdapter', 'reasoner', 'ajaxLoader'], function(Backbone, $, configuration, Encoder, StorageManager, ViewAdapter, Reasoner, AjaxLoader){
+define(['backbone', 'jquery', 'config', 'encoder', 'localStorage/localStorageManager', 'view/ViewAdapter', 'reasoner', 'ajaxLoader'], function(Backbone, $, configuration, Encoder, StorageManager, ViewAdapter, Reasoner, AjaxLoader){
 
 	AppRouter = Backbone.Router.extend({
 
