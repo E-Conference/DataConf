@@ -17,10 +17,15 @@ require.config({
         'jqueryMobile.config': {
         	deps: [
                 'jquery'
-            ],
+            ]
         },
 		'underscore': {
 			exports: '_'
+		},
+		'jStorage': {
+			deps: [
+                'jquery'
+            ]
 		},
 		'arbor':{
 			deps : [
