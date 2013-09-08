@@ -12,7 +12,7 @@
 *	Version: 1.2				   
 *   Tags:  BACKBONE, AJAX, ROUTING
 **/
-define(['backbone', 'jquery', 'config', 'encoder', 'localStorage/localStorageManager', 'view/ViewAdapter', 'reasoner', 'ajaxLoader'], function(Backbone, $, configuration, Encoder, StorageManager, ViewAdapter, Reasoner, AjaxLoader){
+define(['backbone', 'jquery', 'config', 'encoder', 'localStorage/localStorageManager', 'view/ViewAdapter', 'ajaxLoader'], function(Backbone, $, configuration, Encoder, StorageManager, ViewAdapter, AjaxLoader){
 
 	AppRouter = Backbone.Router.extend({
 
@@ -38,10 +38,7 @@ define(['backbone', 'jquery', 'config', 'encoder', 'localStorage/localStorageMan
 			//Initialize storage manager
 			StorageManager.initialize();
 			//Initialize ViewAdapter to text mode
-			ViewAdapter.initialize("text");
-			//Initialize Reasonner with the keywords ontology
-			//Reasoner.initialize();
-			
+			ViewAdapter.initialize("text");	
 			//Initialize ajax Loader 
 			AjaxLoader.initialize(ViewAdapter);
 		

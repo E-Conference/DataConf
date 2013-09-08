@@ -9,7 +9,7 @@
 *   Version: 1.1
 *   Tags:  JSON, SPARQL, AJAX
 **/
-define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'localStorage/localStorageManager','moment'], function($, _, Encoder, ViewAdapter, ViewAdapterGraph, ViewAdapterText, StorageManager, moment){
+define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'localStorage/localStorageManager','moment', 'lib/FileSaver'], function($, _, Encoder, ViewAdapter, ViewAdapterGraph, ViewAdapterText, StorageManager, moment, FileSaver){
 	var swcEventCommandStore = { 
 		/** Command used to get the track events of a given conference **/ 
 	    getConferenceMainTrackEvent : {
@@ -425,6 +425,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 							if(isDefined){
 								var icsButton = $('<button data-role="button" data-inline="true" data-icon="gear" data-iconpos="left">Add to calendar</button>');
 								icsButton.click(function(){
+									debugger;
 									var blob = new Blob([icsEvent], {type: "text/calendar;charset=utf-8"});
 									saveAs(blob, "icsEvent.ics");
 								});

@@ -48,13 +48,6 @@ require.config({
 		backbone: 'lib/backbone',
 		underscore : 'lib/underscore-min',
 		'jqueryMobile.config' : 'lib/jquerymobile.config',
-		'jsw' : 'reasoner/jsw',
-		'jswui' : 'reasoner/jswui',
-		'processOntoloy' : 'reasoner/processOntoloy',
-		'query' : 'reasoner/query',
-		'utilsMin' : 'reasoner/utils-min',
-		'reasoner' : 'reasoner/Reasoner',
-		'reasonerWorker' : 'reasoner/ReasonerWorker',
 		'renderer' : 'view/arborGraph',
 		'arbor-graphics' : 'lib/arbor-graphics',
 		'arbor': 'lib/arbor',
@@ -65,8 +58,7 @@ require.config({
 		'jStorage' : 'lib/jstorage.min',
 		'moment' : 'lib/moment.min',
 		'tpl' : 'lib/templateLoader',
-		'ajaxLoader' : 'ajaxLoader/AjaxLoader',
-		
+		'ajaxLoader' : 'ajaxLoader/AjaxLoader'
     }
 
 });
