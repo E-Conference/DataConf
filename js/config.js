@@ -17,7 +17,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 			//Defnition of the conference
 			"conference" : {
 				"name": "ESWC'2013",
-				"logoUri": "http://2013.eswc-conferences.org/sites/default/files/ESWC2013-logo.png",
+				"logoUri": "http://localhost/BLEND/css/images/banniereTranspBlend.png",
 				"website": "http://2013.eswc-conferences.org/",
 				"baseUri": "http://data.semanticweb.org/conference/eswc/2013",
 			},
@@ -76,7 +76,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					"hash" : "",
 					"view" : "home",
 					"graphView" : "no",
-					"title": "ESWC2013 - publications",
+					"title": "20th to 27th",
 					"commands" : [ 
 						{
 						    "datasource" : "eventDatasource",
