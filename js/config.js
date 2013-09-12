@@ -13,6 +13,7 @@
 **/
 define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandStore','model/GoogleCommandStore','model/swcEventCommandStore', 'model/DPCommandStore'],
 	function(SWDFCommandStore, DBLPCommandStore, DDGoCommandStore, GoogleCommandStore, swcEventCommandStore, DPCommandStore) {
+		
 		var AppConfig = {
 			//Defnition of the conference
 			"conference" : {
@@ -51,7 +52,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					"commands" : GoogleCommandStore,
 				},
 				"eventDatasource" : {
-					"uri" : "http://dataconf.liris.cnrs.fr/simpleschedule/web/app.php/api/schedule_event.jsonp?wwwconf_id=3",
+					"uri" : "http://dataconf.liris.cnrs.fr/simpleschedule-blend/web/api/",
 					"crossDomainMode" : "JSONP",
 					"commands" : swcEventCommandStore,
 				},
@@ -74,25 +75,26 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					"title": "Du 1 au 2 octobre",
 					"commands" : [ 
 						{
-						    "datasource" : "eventDatasource",
-						    "name" : "getConferenceMainTrackEvent",
-						},
-						{
-							"datasource" : "eventDatasource",
-							"name" : "getConferenceKeynote",
-						},
-						{
 							"datasource" : "eventDatasource",
 							"name" : "getConferencePanel",
 						},
 						{
 							"datasource" : "eventDatasource",
-							"name" : "getConferenceTutorial",
+							"name" : "getConferenceTalk",
 						},
 						{
 							"datasource" : "eventDatasource",
 							"name" : "getConferenceWorkshop",
+						},
+						{
+							"datasource" : "eventDatasource",
+							"name" : "getSessionEvent",
+						},
+						{
+							"datasource" : "eventDatasource",
+							"name" : "getConferenceSpecialEvent",
 						}
+						
 					]
 				}, 
 		    "Schedule" : {
@@ -115,39 +117,39 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					"commands" : [ 
 					]
 				}, 
-				"Proceedings-search-by-author" : { 
-					"hash" : "search/by-author/*uri",
+				"Proceedings-search-by-speaker" : { 
+					"hash" : "search/by-speaker/*uri",
 					"view" : "",
 					"graphView" : "no",
-					"title": "Search by author",
+					"title": "Search by speaker",
 					"commands" : [
 					    {
-							"datasource" : "SemanticWebConferenceDatasource",
-							"name" : "getAllAuthors",
+							"datasource" : "eventDatasource",
+							"name" : "getAllSpeakers",
 						} 
 					]
 				},
-			    "Proceedings-search-by-keyword" : { 
-					"hash" : "search/by-keyword/*uri",
+			    "Proceedings-search-by-theme" : { 
+					"hash" : "search/by-theme/*uri",
 					"view" : "",
 					"graphView" : "no",
-					"title": "Search by keywords",
+					"title": "Search by theme",
 					"commands" : [
 					    {
-							"datasource" : "SemanticWebConferenceDatasource",
-							"name" : "getAllKeyword",
+							"datasource" : "eventDatasource",
+							"name" : "getAllTheme",
 						} 
 					]
 				},
-			    "Proceedings-search-by-title" : { 
-					"hash" : "search/by-title/*uri",
+			    "Proceedings-search-by-category" : { 
+					"hash" : "search/by-category/*uri",
 					"view" : "",
 					"graphView" : "no",
-					"title": "Search by title",
+					"title": "Search by category",
 					"commands" : [
 					    {
-							"datasource" : "SemanticWebConferenceDatasource",
-							"name" : "getAllTitle",
+							"datasource" : "eventDatasource",
+							"name" : "getAllCategories",
 						} 
 					]
 				},
@@ -207,36 +209,16 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 						}
 					]
 				},
-				"Author" : {
-					"hash" : "author/:name/*uri",
-					"view" : "author",
-					"graphView" : "yes",
-					"title": "Author",
+				"Speaker" : {
+					"hash" : "speaker/:name",
+					"view" : "speaker",
+					"graphView" : "no",
+					"title": "Speaker",
 					"commands" : [
 						{
-							"datasource" : "DataPaperDatasource",
-							"name" : "getDataPaperAuthor",
+							"datasource" : "eventDatasource",
+							"name" : "getSpeaker",
 						},
-						{
-							"datasource" : "DataPaperDatasource",
-							"name" : "getDataPaperRessource",
-						},
-						{
-							"datasource" : "GoogleDataSource",
-							"name" : "getAuthorPersonalPage",
-						},
-						{
-							"datasource" : "SemanticWebConferenceDatasource",
-							"name" : "getAuthorsProceedings",
-						},
-						{
-							"datasource" : "SemanticWebConferenceDatasource",
-							"name" : "getAuthorOrganization",
-						},
-					    {
-							"datasource" : "DblpDatasource",
-							"name" : "getAuthorPublications",
-						}
 					]
 				},
 				"ExternPublication" : {
