@@ -18,7 +18,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 			//Defnition of the conference
 			"conference" : {
 				"name": "BLEND",
-				"logoUri": "http://localhost/BLEND/css/images/banniereTranspBlend.png",
+				"logoUri": "css/images/banniereTranspBlend.png",
 				"website": "http://www.blendconference.com/",
 				"baseUri": "http://www.blendconference.com/",
 			},
