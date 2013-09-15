@@ -177,6 +177,14 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 							"datasource" : "eventDatasource",
 							"name" : "getEventPublications",
 						},
+						{
+							"datasource" : "eventDatasource",
+							"name" : "getSpeakersFromEventUri",
+						},
+						{
+							"datasource" : "eventDatasource",
+							"name" : "getChairsFromEventUri",
+						},
 						
 						
 					]

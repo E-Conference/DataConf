@@ -286,7 +286,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 					}
 					JSONfile[i] = JSONToken;
 				});
-					console.log(JSONfile);
+				console.log(JSONfile);
 				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
 				return JSONfile;
 				
@@ -1064,7 +1064,125 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 				}
 			}
 	                                         
-	    },  
+	    },
+
+	    getSpeakersFromEventUri : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_person.jsonp?",
+		    getQuery : function(parameters){	
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { role_type : 'Speaker',event_uri:parameters.uri} ;
+		      return ajaxData; 
+		    },
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+				var JSONfile = {};
+				$.each(dataXML,function(i){  
+					var JSONToken = {};
+					JSONToken.speakerName =  this.name || "";
+					JSONToken.speakerDesc =  this.description || "";
+					JSONToken.speakerHomepage =  this.homepage || "";
+					JSONToken.speakerImg =  this.image || "";
+					JSONToken.speakerTwitter =  this.twitter || "";
+					JSONToken.speakerId =  this.id || "";
+					JSONToken.speakerSlug =  this.slug || "";
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							parameters.contentEl.append($('<h2>Speaker(s)</h2>')); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#speaker/',
+													  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
+													  },
+													 "speakerName",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "speaker : "+str["speakerName"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#speaker/',
+												  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
+												  },
+												 "speakerName",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "speaker : "+str["speakerName"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
+
+					}
+				} 
+			}
+		},
+
+	    getChairsFromEventUri : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_person.jsonp?",
+		    getQuery : function(parameters){	
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { role_type : 'Chair',event_uri:parameters.uri} ;
+		      return ajaxData; 
+		    },
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+				var JSONfile = {};
+				$.each(dataXML,function(i){  
+					var JSONToken = {};
+					JSONToken.speakerName =  this.name || "";
+					JSONToken.speakerDesc =  this.description || "";
+					JSONToken.speakerHomepage =  this.homepage || "";
+					JSONToken.speakerImg =  this.image || "";
+					JSONToken.speakerTwitter =  this.twitter || "";
+					JSONToken.speakerId =  this.id || "";
+					JSONToken.speakerSlug =  this.slug || "";
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							parameters.contentEl.append($('<h2>Chair(s)</h2>')); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#speaker/',
+													  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
+													  },
+													 "speakerName",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "speaker : "+str["speakerName"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#speaker/',
+												  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
+												  },
+												 "speakerName",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "speaker : "+str["speakerName"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
+
+					}
+				} 
+			}
+		},
 	  
 		/** Command used to get and display the documents linked to an event **/ 
 	    getEventPublications : {
