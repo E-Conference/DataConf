@@ -106,8 +106,13 @@ define(['backbone', 'jquery', 'config', 'encoder', 'localStorage/localStorageMan
 							if(doRequest){
 								console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 								//Retrieveing the query built by the command function "getQuery"
-								var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri,datasource : currentDatasource, name : name, conference : self.conference})
-								//Preparing Ajax call 
+								try {
+									//Preparing Ajax call 
+									var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri,datasource : currentDatasource, name : name, conference : self.conference})
+							    } catch (e) {
+							    	e.message = "cannot find command '"+commandItem.name+"' in the commandStore '"+commandItem.datasource+"'";
+							    	throw e;
+							    }
 
 								if(ajaxData != null){
 									AjaxLoader.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name), name : name, conference : self.conference});
