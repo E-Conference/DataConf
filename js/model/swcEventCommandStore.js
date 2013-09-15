@@ -109,7 +109,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 						if(parameters.mode == "text"){
 							ViewAdapterText.appendList(parameters.JSONdata,
 													 {baseHref:'#speaker/',
-													  hrefCllbck:function(str){return Encoder.encode(str["speakerId"])},
+													  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
 													  },
 													 "speakerName",
 													 parameters.contentEl,
@@ -138,7 +138,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 		    serviceUri : "schedule_person.jsonp?",
 		    getQuery : function(parameters){	
 			  var conferenceUri = parameters.conferenceUri;
-		      var ajaxData = { id : parameters.name} ;
+		      var ajaxData = { slug : parameters.name} ;
 		      return ajaxData; 
 		    },
 		    
