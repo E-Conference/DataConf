@@ -255,8 +255,178 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 			}
 		},
 
+		getEventbyTheme : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_event.jsonp?",
+		    getQuery : function(parameters){	
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { theme_name : parameters.name } ;
+		      return ajaxData; 
+		    },
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+				var JSONfile = {};
+				$(dataXML).each(function(i){  
+					var JSONToken = {};
+					JSONToken.eventLabel =  this.name
+					for(var j=0;j<this.xproperties.length;j++){
+					  if(this.xproperties[j].xNamespace=='event_uri')JSONToken.eventUri =  this.xproperties[j].xValue;
+					}
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+				
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							
+							parameters.contentEl.append('<h2>'+parameters.name+'</h2>'); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#event/',
+													  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+													  },
+													 "eventLabel",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#event/',
+												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+												  },
+												 "eventLabel",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
 
-	    getConferenceWorkshop : {
+					}
+				} 
+			}
+		},
+
+		getAllCategories : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_category.jsonp?",
+		    getQuery : function(parameters){	
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { } ;
+		      return ajaxData; 
+		    },
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+				var JSONfile = {};
+				$.each(dataXML,function(i){  
+					var JSONToken = {};
+					JSONToken.categoryLibelle =  this.name || "";
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							parameters.contentEl.append('<h2>Categories</h2>'); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#category/',
+													  hrefCllbck:function(str){return Encoder.encode(str["categoryLibelle"])},
+													  },
+													 "categoryLibelle",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "Track : "+str["categoryLibelle"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#category/',
+												  hrefCllbck:function(str){return Encoder.encode(str["categoryLibelle"])},
+												  },
+												 "categoryLibelle",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["categoryLibelle"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
+
+					}
+				} 
+			}
+		},
+
+		getEventbyCategory : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_event.jsonp?",
+		    getQuery : function(parameters){	
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { category_name : parameters.name } ;
+		      return ajaxData; 
+		    },
+		    
+		    
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+				var JSONfile = {};
+				$(dataXML).each(function(i){  
+					var JSONToken = {};
+					JSONToken.eventLabel =  this.name
+					for(var j=0;j<this.xproperties.length;j++){
+					  if(this.xproperties[j].xNamespace=='event_uri')JSONToken.eventUri =  this.xproperties[j].xValue;
+					}
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+				
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							
+							parameters.contentEl.append('<h2>'+parameters.name+'</h2>'); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#event/',
+													  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+													  },
+													 "eventLabel",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#event/',
+												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+												  },
+												 "eventLabel",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
+
+					}
+				} 
+			}
+		},
+
+		getConferenceWorkshop : {
 		    dataType : "JSONP",
 		    method : "GET",
 		    serviceUri : "schedule_event.jsonp?",
@@ -949,7 +1119,66 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 			}
 	    },
 		
-		/** Command used Schedule of the conf **/
+		getTrackSubEvent : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_event.jsonp?",
+		    getQuery : function(parameters){	
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { parent_xproperty_value : parameters.uri,category_name : "TrackEvent" } ;
+		      return ajaxData; 
+		    },
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+				var JSONfile = {};
+				$(dataXML).each(function(i){
+					var JSONToken = {};
+					JSONToken.eventLabel =  this.name
+					for(var j=0;j<this.xproperties.length;j++){
+					  if(this.xproperties[j].xNamespace=='event_uri')JSONToken.eventUri =  this.xproperties[j].xValue;
+					}
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+				
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							
+							parameters.contentEl.append('<h2>Sub events</h2>'); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#event/',
+													  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+													  },
+													 "eventLabel",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#event/',
+												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+												  },
+												 "eventLabel",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
+
+					}
+				} 
+			}
+		},
+ 
+
+	    /** Command used Schedule of the conf **/
 		getConferenceSchedule : {
 	 
 			dataType : "JSONP", 

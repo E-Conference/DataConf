@@ -221,6 +221,30 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 						},
 					]
 				},
+				"Theme" : {
+					"hash" : "theme/:name",
+					"view" : "theme",
+					"graphView" : "no",
+					"title": "Theme",
+					"commands" : [
+						{
+							"datasource" : "eventDatasource",
+							"name" : "getEventbyTheme",
+						},
+					]
+				},
+				"Category" : {
+					"hash" : "category/:name",
+					"view" : "category",
+					"graphView" : "no",
+					"title": "Category",
+					"commands" : [
+						{
+							"datasource" : "eventDatasource",
+							"name" : "getEventbyCategory",
+						},
+					]
+				},
 				"ExternPublication" : {
 					"hash" : "externPublication/*uri",
 					"view" : "externPublication",
