@@ -202,6 +202,128 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 			}
 		},
 
+		getEventBySpeakerName : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_event.jsonp?",
+		    getQuery : function(parameters){	
+		    	// debugger;
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { role_type : 'Speaker',person_slug:parameters.name} ;
+		      return ajaxData; 
+			     
+		    },
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+		    	// debugger;
+				var JSONfile = {};
+				$(dataXML).each(function(i){  
+					var JSONToken = {};
+					JSONToken.eventLabel =  this.name
+					for(var j=0;j<this.xproperties.length;j++){
+					  if(this.xproperties[j].xNamespace=='event_uri')JSONToken.eventUri =  this.xproperties[j].xValue;
+					}
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+				
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							
+							parameters.contentEl.append('<h2>Speaker at</h2>'); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#event/',
+													  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+													  },
+													 "eventLabel",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#event/',
+												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+												  },
+												 "eventLabel",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
+
+					}
+				} 
+			}
+		},
+
+		getEventByChairName : {
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "schedule_event.jsonp?",
+		    getQuery : function(parameters){	
+		    	// debugger;
+			  var conferenceUri = parameters.conferenceUri;
+		      var ajaxData = { role_type : 'Chair',person_slug:parameters.name} ;
+		      return ajaxData; 
+			     
+		    },
+		    
+		    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+		    	// debugger;
+				var JSONfile = {};
+				$(dataXML).each(function(i){  
+					var JSONToken = {};
+					JSONToken.eventLabel =  this.name
+					for(var j=0;j<this.xproperties.length;j++){
+					  if(this.xproperties[j].xNamespace=='event_uri')JSONToken.eventUri =  this.xproperties[j].xValue;
+					}
+					JSONfile[i] = JSONToken;
+				});
+					console.log(JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				return JSONfile;
+				
+			},
+				
+			ViewCallBack : function(parameters){
+				//Reasoner.getMoreSpecificKeywords();
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							
+							parameters.contentEl.append('<h2>Chair at</h2>'); 
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#event/',
+													  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+													  },
+													 "eventLabel",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+						}else{ 
+							ViewAdapterGraph.appendList(parameters.JSONdata,
+												 {baseHref:'#event/',
+												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+												  },
+												 "eventLabel",
+												 parameters.contentEl,
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
+												  option:{color:"#3366CC"},
+												 }); 
+						}
+
+					}
+				} 
+			}
+		},
+
 		getAllTheme : {
 		    dataType : "JSONP",
 		    method : "GET", 
@@ -459,7 +581,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 				if(parameters.JSONdata != null){
 					if(_.size(parameters.JSONdata) > 0 ){
 						if(parameters.mode == "text"){
-							
+
 							parameters.contentEl.append('<h2>Workshops</h2>'); 
 							ViewAdapterText.appendList(parameters.JSONdata,
 													 {baseHref:'#event/',
