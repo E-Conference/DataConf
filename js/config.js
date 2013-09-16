@@ -192,7 +192,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 				"Publication" : { 
 					"hash" : "publication/*uri",
 					"view" : "publication",
-					"graphView" : "yes",
+					"graphView" : "no",
 					"title": "Publication",
 					"commands" : [
 						{
@@ -264,7 +264,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 				"ExternPublication" : {
 					"hash" : "externPublication/*uri",
 					"view" : "externPublication",
-					"graphView" : "yes",
+					"graphView" : "no",
 					"title": "External publication",
 					"commands" : [
 					    {
@@ -280,7 +280,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 				"Keyword" : {
 					"hash" : "keyword/*uri",
 					"view" : "keyword",
-					"graphView" : "yes",
+					"graphView" : "no",
 					"title": "Keyword",
 					"commands" : [
 					    {
@@ -292,7 +292,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 				"Organization" : {
 					"hash" : "organization/:name/*uri",
 					"view" : "organization",
-					"graphView" : "yes",
+					"graphView" : "no",
 					"title": "Organization",
 					"commands" : [
 						{

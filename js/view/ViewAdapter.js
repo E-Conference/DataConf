@@ -7,7 +7,7 @@
 *   Version: 1.2
 *   Tags:  arborjs   
 **/
-define(['jquery', 'jqueryMobile','arbor', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'view/AbstractView', 'localStorage/localStorageManager'], function($, jqueryMobile, arbor, ViewAdapterGraph, ViewAdapterText, AbstractView, StorageManager){
+define(['jquery', 'jqueryMobile','arbor', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'view/AbstractView', 'localStorage/localStorageManager', 'ajaxLoader'], function($, jqueryMobile, arbor, ViewAdapterGraph, ViewAdapterText, AbstractView, StorageManager, AjaxLoader){
 	var ViewAdapter = {
 
 		initialize : function(mode){

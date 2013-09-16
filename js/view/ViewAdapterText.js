@@ -99,6 +99,64 @@ define(['jquery', 'arbor'], function($, arbor){
 		
 		},
 
+		appendListImage : function(dataList,href,labelProperty, imageProperty, appendToDiv,option){
+			
+			if(!option)var option = {};
+			if(!href) var href={};
+			//limit of results to enable the filter mode
+			var isfilter = _.size(dataList) > 10 ? true : false; 
+			if(option.autodividers == "force"){
+				isfilter = true;
+			}
+			var currentRank=0,counter=1;
+
+			var ulContainer = $('<ul  id="SearchByAuthorUl" data-role="listview"'+ 
+							 (option.autodividers ? 'data-autodividers="true"':'')+
+							  (isfilter?'data-filter="true" ':'')+
+							  'data-shadow="false"'+
+							  'data-filter-placeholder="filter ..." class="ui-listview"> ');
+			var remainder = "";
+			var bubbleRemainder = "";
+			$.each(dataList, function(i,currentData){
+				var currentHref=href.baseHref+href.hrefCllbck(currentData);
+				var currentLabel=currentData[labelProperty];
+				var currentImage=currentData[imageProperty];
+				
+				//show
+				if(currentLabel != remainder){ 
+					var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-mini="true" data-shadow="false"')+'>'+currentLabel+'</a>');
+					
+					if(currentImage){
+						var img = $('<img src='+currentImage+'>');
+						a.append(img);
+					}
+					var li = $('<li></li>');
+					if(isfilter){
+						ulContainer.append(li.append(a));
+					}else{
+						appendToDiv.append(a);
+					}   
+					
+					
+					
+				}
+				if(option.count){
+					if(currentLabel == remainder){
+						var currentCount = parseInt(bubbleRemainder.text())+1;
+						$(bubbleRemainder).html(currentCount);
+					}else{
+					
+						var bubble = $('<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">1</span>');
+						a.append(bubble);
+						bubbleRemainder = bubble;
+					}
+				}
+				remainder = currentLabel;
+				
+		   });//end each
+		   if(isfilter)ulContainer.appendTo(appendToDiv);
+		},
+
 
 
 		// option { option.theme a|b|c , option.tiny : bool, option.align : right,option.prepend }

@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'arbor', 'renderer'], function($, _, arbor, Rend
 
 		/** Initialize the particul system **/
 		initSystem : function (){
+			debugger;
 			this.sys = arbor.ParticleSystem();
 		},
 		
@@ -26,7 +27,7 @@ define(['jquery', 'underscore', 'arbor', 'renderer'], function($, _, arbor, Rend
 	    initContainer : function(el,rootNodeUri,rootNodeLabel){
 			this["nodeCounter"]=0;
 			this.el=el;
-
+			debugger;
 			if(rootNodeLabel != undefined){
 				this.rootNodeUri=rootNodeLabel;
 			}else{

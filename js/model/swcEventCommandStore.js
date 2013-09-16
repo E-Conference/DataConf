@@ -98,20 +98,20 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 					JSONfile[i] = JSONToken;
 				});
 					console.log(JSONfile);
-				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				StorageManager.pushCommandToStorage(currentUri,"getAllSpeakers",JSONfile);
 				return JSONfile;
 			},
 				
 			ViewCallBack : function(parameters){
-				//Reasoner.getMoreSpecificKeywords();
 				if(parameters.JSONdata != null){
 					if(_.size(parameters.JSONdata) > 0 ){
 						if(parameters.mode == "text"){
-							ViewAdapterText.appendList(parameters.JSONdata,
+							ViewAdapterText.appendListImage(parameters.JSONdata,
 													 {baseHref:'#speaker/',
 													  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
 													  },
 													 "speakerName",
+													 "speakerImg",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "speaker : "+str["speakerName"];}});
 						}else{ 
@@ -154,7 +154,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 				
 
 					console.log(JSONToken);
-				//StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				StorageManager.pushCommandToStorage(currentUri,"getSpeaker",JSONToken);
 				return JSONToken;
 			},
 				
@@ -164,12 +164,10 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 					if(_.size(parameters.JSONdata) > 0 ){
 						if(parameters.mode == "text"){
 							if(parameters.JSONdata.speakerImg){
-								
 								parameters.contentEl.append($('<img src="'+parameters.JSONdata.speakerImg+'"/>'));    
 							}
 							if(parameters.JSONdata.speakerName){
-								parameters.contentEl.append($('<h2>Name</h2>'));
-								parameters.contentEl.append($('<p>'+parameters.JSONdata.speakerName+'</p>'));    
+								$("[data-role = page]").find("#DataConf").html(parameters.JSONdata.speakerName);
 							}
 							if(parameters.JSONdata.speakerDesc){
 								parameters.contentEl.append($('<h2>Description</h2>'));
@@ -177,11 +175,11 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 							}
 							if(parameters.JSONdata.speakerHomepage){
 								parameters.contentEl.append($('<h2>Homepage</h2>'));
-								parameters.contentEl.append($('<p>'+parameters.JSONdata.speakerHomepage+'</p>'));    
+								parameters.contentEl.append($('<a href='+parameters.JSONdata.speakerHomepage+'>'+parameters.JSONdata.speakerHomepage+'</a>'));    
 							}
 							if(parameters.JSONdata.speakerTwitter){
 								parameters.contentEl.append($('<h2>Twitter</h2>'));
-								parameters.contentEl.append($('<p>'+parameters.JSONdata.speakerTwitter+'</p>'));    
+								parameters.contentEl.append($('<a href='+parameters.JSONdata.speakerTwitter+'>'+parameters.JSONdata.speakerTwitter+'</a>'));    
 							}
 
 						}else{ 
@@ -1100,13 +1098,9 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 					if(_.size(parameters.JSONdata) > 0 ){
 						if(parameters.mode == "text"){
 							parameters.contentEl.append($('<h2>Speaker(s)</h2>')); 
-							ViewAdapterText.appendList(parameters.JSONdata,
-													 {baseHref:'#speaker/',
-													  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
-													  },
-													 "speakerName",
-													 parameters.contentEl,
-													 {type:"Node",labelCllbck:function(str){return "speaker : "+str["speakerName"];}});
+							$.each(parameters.JSONdata, function(i,speaker){
+								ViewAdapterText.appendButton(parameters.contentEl,'#speaker/'+Encoder.encode(speaker.speakerSlug),speaker.speakerName,{tiny : 'true'});
+							});
 						}else{ 
 							ViewAdapterGraph.appendList(parameters.JSONdata,
 												 {baseHref:'#speaker/',
