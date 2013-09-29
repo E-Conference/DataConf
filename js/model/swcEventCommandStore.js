@@ -98,7 +98,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 					JSONfile[i] = JSONToken;
 				});
 					console.log(JSONfile);
-				StorageManager.pushCommandToStorage(currentUri,"getAllSpeakers",JSONfile);
+				//StorageManager.pushCommandToStorage(currentUri,"getAllSpeakers",JSONfile);
 				return JSONfile;
 			},
 				
@@ -154,7 +154,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 				
 
 					console.log(JSONToken);
-				StorageManager.pushCommandToStorage(currentUri,"getSpeaker",JSONToken);
+				//StorageManager.pushCommandToStorage(currentUri,"getSpeaker",JSONToken);
 				return JSONToken;
 			},
 				
@@ -1440,10 +1440,10 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 						//////////////////////////////
 						/// look for special event ///
 						//////////////////////////////
-					  var currentEvent = {};
-						currentEvent.eventType =  event.categories[0].name;
+					  	var currentEvent = {};
+						currentEvent.eventType = (event.categories[0]?event.categories[0].name:"");
 						 
-						if(currentEvent.eventType!="Event" && currentEvent.eventType!="TalkEvent" && currentEvent.eventType!="ConferenceEvent"){ 
+						if(currentEvent.eventType!="Event" && currentEvent.eventType!="ConferenceEvent"){ 
 						   
 					    //retrieve current Start Slot
 						  var currentStartSlot =  event.start_at; 	
@@ -1535,6 +1535,88 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 				        } 
 					  }
 					  parameters.contentEl.append(content);
+					}
+				}
+			}
+	    },
+
+	    	    /** Command used Schedule of the conf **/
+		getWhatsNext : {
+	 
+			dataType : "JSONP", 
+			method : "GET",
+			serviceUri : "schedule_event.jsonp?",  
+			getQuery : function(parameters) {  
+				//Building sparql query with prefix
+				var query = ""; 
+				//Encapsulating query in json object to return it
+				
+					var  ajaxData = {"after" : new Date()};
+				
+				return ajaxData;
+			},
+			//Declaring the callback function to use when sending the command
+			ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+				
+				if(dataXML.length != 0){
+					var JSONfile = {};
+					var seenLocation = [];
+					$(dataXML).each(function(i,event){  
+						console.log(event);
+						
+						//////////////////////////////
+						/// look for special event ///
+						//////////////////////////////
+					  	var currentEvent = {};
+						currentEvent.eventType = (event.categories[0]?event.categories[0].name:"");
+						currentEvent.eventLocation = (event.location?event.location.name:"");
+						 
+						if(currentEvent.eventType!="Event" && currentEvent.eventType!="ConferenceEvent" && currentEvent.eventLocation !=""){ 
+							   
+						    //retrieve first event by location
+							var currentLocation =  event.location.name; 	
+							if(_.indexOf(seenLocation, currentLocation) == -1){
+								seenLocation.push(currentLocation);
+								JSONfile[i] = {};
+
+								currentEvent.eventUri = event.xproperties[0].xValue || "";
+								currentEvent.eventLabel =  event.name || "";
+								currentEvent.eventStart=  event.start_at || "";
+								currentEvent.eventEnd= event.end_at || "";
+								
+								JSONfile[i].location = currentLocation;
+								JSONfile[i].event = currentEvent;
+							}
+						}
+					});
+					//StorageManager.pushCommandToStorage(currentUri,"getConferenceSchedule",JSONfile);
+					return JSONfile;
+				}
+				return null;
+			},
+			
+			ViewCallBack : function(parameters){
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						var content=$("<div data-role='collapsible-set' data-inset='false'></div>");
+						var currentDay,currentUl ;
+						$.each(parameters.JSONdata, function(i,location){  
+							var lasts  =  moment(location.event.eventStart).from(moment(location.event.eventEnd),true); 
+							var formatedStart = moment(location.event.eventStart).format('h:mm a') 
+							currentCollabsible = $('<div data-role="collapsible" data-theme="d" ><h2>'+location.location+'</h2></div>');
+							currentUl = $('<ul data-role="listview" data-inset="true" ></ul>');
+							content.append(currentCollabsible); 
+							currentCollabsible.append(currentUl);
+
+							currentUl.append('<li data-inset="true"  ><a href="#event/'+Encoder.encode(location.event.eventUri)+'">\
+							                <h3>'+location.event.eventLabel+'</h3>\
+							                <p>'+location.event.eventType+'</p>\
+							                <p>Start at : <strong>'+formatedStart+'</p>\
+											<p>last : <strong>'+lasts+'</strong></p>\
+							                </a></li>'); 
+					  	})
+
+					  	parameters.contentEl.append(content);
 					}
 				}
 			}

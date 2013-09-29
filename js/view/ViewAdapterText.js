@@ -126,10 +126,14 @@ define(['jquery', 'arbor'], function($, arbor){
 				if(currentLabel != remainder){ 
 					var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-mini="true" data-shadow="false"')+'>'+currentLabel+'</a>');
 					
-					if(currentImage){
-						var img = $('<img src='+currentImage+'>');
-						a.append(img);
+					var img="";
+					if(currentImage != ""){
+						img = $('<img src='+currentImage+'>');
+					}else{
+						img = $('<img src="css/images/default_avatar.gif">');
 					}
+						a.append(img);
+					
 					var li = $('<li></li>');
 					if(isfilter){
 						ulContainer.append(li.append(a));

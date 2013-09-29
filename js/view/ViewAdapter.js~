@@ -12,7 +12,7 @@ define(['jquery', 'jqueryMobile','arbor', 'view/ViewAdapterGraph', 'view/ViewAda
 
 		initialize : function(mode){
 			this.mode = mode;
-			//ViewAdapterGraph.initSystem();
+			ViewAdapterGraph.initSystem();
 		},
 
 		update : function(routeItem,title,conference,datasources,uri,name){

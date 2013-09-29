@@ -97,7 +97,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 						
 					]
 				}, 
-		    "Schedule" : {
+		    	"Schedule" : {
 					"hash" : "schedule/*locationLabel",
 					"view" : "schedule",
 					"graphView" : "no",
@@ -108,7 +108,19 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 						    "name" : "getConferenceSchedule",
 						},
 					]
-				}, 
+				},
+				"WhatsNext" : {
+					"hash" : "whatsnext/",
+					"view" : "whatsnext",
+					"graphView" : "no",
+					"title": "What's next?",
+					"commands" : [
+						{
+						    "datasource" : "eventDatasource",
+						    "name" : "getWhatsNext",
+						},
+					]
+				},  
 			    "qrScan" : {
 					"hash" : "qrcScan",
 					"view" : "qrcScan",
