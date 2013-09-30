@@ -878,6 +878,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 					JSONfile.eventStart = (dataXML.start_at!= '1980-01-01 00:00'?dataXML.start_at:"");
 					JSONfile.eventEnd = (dataXML.end_at!= '1980-01-01 00:00'?dataXML.end_at:"");
 					JSONfile.eventLocationName =  (dataXML.location.name?dataXML.location.name:"") ;
+					JSONfile.eventThemes =  (dataXML.themes?dataXML.themes:"") ;
 					
 				 // StorageManager.pushCommandToStorage(currentUri,"getEvent",JSONfile);
 				  return JSONfile;
@@ -903,6 +904,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 							var locationName  = eventInfo.eventLocationName;	
 							var eventStart  = eventInfo.eventStart;	
 							var eventEnd  = eventInfo.eventEnd;
+							var eventThemes  = eventInfo.eventThemes;	
 							var eventStartICS  = moment(eventInfo.eventStart,"YYY-MM-DD HH:mm:ss").format("YYYYMMDDTHHmmss");	
 							var eventEndICS  = moment(eventInfo.eventEnd ,"YYY-MM-DD HH:mm:ss").format("YYYYMMDDTHHmmss");	
 
@@ -965,11 +967,17 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 							if(isDefined){
 								var icsButton = $('<button data-role="button" data-inline="true" data-icon="gear" data-iconpos="left">Add to calendar</button>');
 								icsButton.click(function(){
-									debugger;
 									var blob = new Blob([icsEvent], {type: "text/calendar;charset=utf-8"});
 									saveAs(blob, "icsEvent.ics");
 								});
 								parameters.contentEl.append(icsButton);
+							}
+
+							if(eventThemes != ""){
+								parameters.contentEl.append('<h2>Themes</h2>'); 
+								$.each(eventThemes, function(i,theme){
+									ViewAdapterText.appendButton(parameters.contentEl,'#theme/'+Encoder.encode(theme.name),theme.name,{tiny : 'true'});
+								});
 							}
 						}else{
 							
