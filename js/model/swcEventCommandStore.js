@@ -9,7 +9,7 @@
 *   Version: 1.1
 *   Tags:  JSON, SPARQL, AJAX
 **/
-define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterGraph', 'view/ViewAdapterText', 'localStorage/localStorageManager','moment', 'lib/FileSaver'], function($, _, Encoder, ViewAdapter, ViewAdapterGraph, ViewAdapterText, StorageManager, moment, FileSaver){
+define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterText', 'localStorage/localStorageManager','moment', 'lib/FileSaver'], function($, _, Encoder, ViewAdapter, ViewAdapterText, StorageManager, moment, FileSaver){
 	var swcEventCommandStore = { 
 
 		getAllEvents : {
@@ -55,19 +55,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -114,19 +102,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "speakerImg",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "speaker : "+str["speakerName"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#speaker/',
-												  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
-												  },
-												 "speakerName",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "speaker : "+str["speakerName"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -182,19 +158,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 								parameters.contentEl.append($('<a href='+parameters.JSONdata.speakerTwitter+'>'+parameters.JSONdata.speakerTwitter+'</a>'));    
 							}
 
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#speaker/',
-												  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
-												  },
-												 "speakerName",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "speaker : "+str["speakerName"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -243,19 +207,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -304,19 +256,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -357,17 +297,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "themeLibelle",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["themeLibelle"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#theme/',
-												  hrefCllbck:function(str){return Encoder.encode(str["themeLibelle"])},
-												  },
-												 "themeLibelle",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["themeLibelle"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
 
 					}
@@ -415,17 +344,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
 
 					}
@@ -468,19 +386,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "categoryLibelle",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["categoryLibelle"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#category/',
-												  hrefCllbck:function(str){return Encoder.encode(str["categoryLibelle"])},
-												  },
-												 "categoryLibelle",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["categoryLibelle"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -528,17 +434,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
 
 					}
@@ -588,19 +483,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -650,19 +533,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -712,19 +583,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -773,19 +632,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -835,19 +682,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -1060,11 +895,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 							$.each(parameters.JSONdata, function(i,track){
 								ViewAdapterText.appendButton(parameters.contentEl,'#event/'+Encoder.encode(track.eventUri),track.eventLabel);
 							});
-						}else{
-							$.each(parameters.JSONdata, function(i,track){
-								ViewAdapterGraph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri),{color:"#003399"});
-							});
-						
 						}
 					}
 				}
@@ -1109,19 +939,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 							$.each(parameters.JSONdata, function(i,speaker){
 								ViewAdapterText.appendButton(parameters.contentEl,'#speaker/'+Encoder.encode(speaker.speakerSlug),speaker.speakerName,{tiny : 'true'});
 							});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#speaker/',
-												  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
-												  },
-												 "speakerName",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "speaker : "+str["speakerName"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -1168,19 +986,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "speakerName",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "speaker : "+str["speakerName"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#speaker/',
-												  hrefCllbck:function(str){return Encoder.encode(str["speakerSlug"])},
-												  },
-												 "speakerName",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "speaker : "+str["speakerName"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
-
 					}
 				} 
 			}
@@ -1231,15 +1037,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 												 "publiTitle",
 												 parameters.contentEl
 												 );
-						}else{
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#publication/',
-												  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
-												  },
-												 "publiTitle",
-												 parameters.contentEl,
-												 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
-						
 						}
 					}
 				} 
@@ -1290,14 +1087,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 												 parameters.contentEl,
 												 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
 
-						}else{
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
 						}
 					}
 				} 
@@ -1347,14 +1136,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 												 parameters.contentEl,
 												 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
 
-						}else{
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
 						}
 					}
 				} 
@@ -1401,17 +1182,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 													 "eventLabel",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-						}else{ 
-							ViewAdapterGraph.appendList(parameters.JSONdata,
-												 {baseHref:'#event/',
-												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-												  },
-												 "eventLabel",
-												 parameters.contentEl,
-												 {type:"Node",
-												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
-												  option:{color:"#3366CC"},
-												 }); 
 						}
 
 					}
@@ -1628,7 +1398,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterG
 					}
 				}
 			}
-	    },
+	    }
 	};
  	return swcEventCommandStore;
 });
