@@ -15,6 +15,9 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 	function(SWDFCommandStore, DBLPCommandStore, DDGoCommandStore, GoogleCommandStore, swcEventCommandStore, DPCommandStore) {
 		
 		var AppConfig = {
+			"app" : {
+				"liveconLogo" : "livecon.png"
+			},
 			//Defnition of the conference
 			"conference" : {
 				"id": "1",
