@@ -262,6 +262,20 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					]
 				},
 
+				"Locations" : { 
+					"hash" : "locations",
+					"view" : "locations",
+					"graphView" : "no",
+					"title": "Locations",
+					"commands" : [
+						{
+							"datasource" : "eventDatasource",
+							"name" : "getAllLocations",
+						}
+					]
+				},
+				
+
 				"OrganizationSearch" : {
 					"hash" : "search/organization",
 					"view" : "organizationSearch",
@@ -288,10 +302,10 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					"graphView" : "no",
 					"title": "Person",
 					"commands" : [
-						{
-							"datasource" : "GoogleDataSource",
-							"name" : "getAuthorPersonalPage",
-						},
+						// {
+						// 	"datasource" : "GoogleDataSource",
+						// 	"name" : "getAuthorPersonalPage",
+						// },
 						{
 							"datasource" : "eventDatasource",
 							"name" : "getPerson",

@@ -64,6 +64,55 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 			}
 		},
 
+		getAllLocations : {
+
+		    dataType : "JSONP",
+		    method : "GET", 
+		    serviceUri : "",
+		    getQuery : function(parameters){	
+	    		var prefix =   'PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ';
+					
+				var query =	'SELECT DISTINCT ?locationName  ?locationUri WHERE  {\
+							 <'+parameters.uri+'>    swc:isSuperEventOf    ?eventUri.\
+							  	?eventUri swc:hasLocation ?locationUri.\
+							  	?locationUri rdfs:label ?locationName.\
+							 } ORDER BY ASC(?locationName) '; 
+	
+				var  ajaxData = { query : prefix + query, output : "json"};
+		     
+		      return ajaxData;     
+		    },
+		    
+		    ModelCallBack : function(dataJSON,conferenceUri,datasourceUri, currentUri){
+				var JSONfile = {};
+				$.each(dataJSON.results.bindings,function(i){  
+					var JSONToken = {};
+					JSONToken.uri = this.locationUri ? this.locationUri.value  : null;
+					JSONToken.name =  this.locationName ? this.locationName.value : null;
+					JSONfile[i] = JSONToken;
+				});
+				console.log(JSONfile);
+				StorageManager.pushCommandToStorage(currentUri,"getAllTopics",JSONfile);
+				return JSONfile;
+			},
+				
+			ViewCallBack : function(parameters){
+				if(parameters.JSONdata != null){
+					if(_.size(parameters.JSONdata) > 0 ){
+						if(parameters.mode == "text"){
+							ViewAdapterText.appendList(parameters.JSONdata,
+													 {baseHref:'#schedule/',
+													  hrefCllbck:function(str){return Encoder.encode(str["name"])},
+													  },
+													 "name",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "event : "+str["name"];}});
+						}
+					}
+				} 
+			}
+		},
+
 		getAllEvents : {
 		    dataType : "JSONP",
 		    method : "GET", 
@@ -177,7 +226,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 		    getQuery : function(parameters){	
 
 				var prefix =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ';
-				var query =   'SELECT DISTINCT ?personName  ?personUri ?imgAuthor  WHERE  { ' +
+				var query =   'SELECT DISTINCT ?personName  ?personUri ?personImg  WHERE  { ' +
 								'  {  <'+parameters.conference.baseUri+'> swc:hasRelatedDocument ?publiUri.' + 
 								'   ?personUri foaf:made ?publiUri.  ' +
 								'   ?personUri foaf:name ?personName.' +
@@ -185,7 +234,8 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 								' } UNION {  <'+parameters.conference.baseUri+'> swc:isSuperEventOf ?eventUri.' + 
 								'   ?roleUri swc:isRoleAt ?eventUri.  ' +
 								'   ?roleUri swc:heldBy ?personUri.		'+
-								'	?personUri foaf:name ?personName.  } '+
+								'	?personUri foaf:name ?personName.  '+
+								'	OPTIONAL { ?personUri foaf:img ?personImg.} } '+
 								'} ORDER BY ASC(?personName) '; 
 				var  ajaxData = { query : prefix + query, output : "json" };
 				return ajaxData;
@@ -198,7 +248,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 					var JSONToken = {};
 					JSONToken.name =  this.personName.value || "";
 					JSONToken.uri =  this.personUri.value || "";
-					JSONToken.img =  this.personImg ? this.personImg.value : null;
+					JSONToken.image =  this.personImg ? this.personImg.value : null;
 					JSONfile[i] = JSONToken;
 				});
 					console.log(JSONfile);
@@ -218,7 +268,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 													 "name",
 													 "image",
 													 parameters.contentEl,
-													 {type:"Node",labelCllbck:function(str){return "person : "+str["uri"];},count: true});
+													 {type:"Node",labelCllbck:function(str){return "person : "+str["uri"];}});
 						}
 					}
 				} 
@@ -480,16 +530,20 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 							    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>               ' +
 							    'PREFIX dc: <http://purl.org/dc/elements/1.1/>                      ' +
 							    'PREFIX swrc: <http://swrc.ontoware.org/ontology#>                  ' +
+							    'PREFIX ical: <http://www.w3.org/2002/12/cal/ical#> 				' +
 							    'PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		        ' ;
 							
-			    var query  =	'SELECT DISTINCT  ?authorName ?authorHomepage ?authorImg ?organizationUri ?organizationName ?publicationUri ?publicationName WHERE  {  ' +
-							    ' { <'+parameters.uri+'>  foaf:name ?authorName.                     ' +
-							    '	OPTIONAL {<'+parameters.uri+'>  foaf:homepage ?authorHomepage.}' +
-							    '	OPTIONAL {<'+parameters.uri+'>  foaf:img ?authorImg.}' +
+			    var query  =	'SELECT DISTINCT  ?personName ?personHomepage ?personImg ?organizationUri ?organizationName ?publicationUri ?publicationName ?roleUri  ?eventUri ?eventName WHERE  {  ' +
+							    ' { <'+parameters.uri+'>  foaf:name ?personName.                     ' +
+							    '	OPTIONAL {<'+parameters.uri+'>  foaf:homepage ?personHomepage.}' +
+							    '	OPTIONAL {<'+parameters.uri+'>  foaf:img ?personImg.}' +
 							    ' } UNION { ?organizationUri swrc:hasMember  <'+parameters.uri+'> . '+ 
 							    '   ?organizationUri  rdfs:label ?organizationName.  ' +
 							    ' } UNION { ?publicationUri foaf:maker  <'+parameters.uri+'> . '+ 
-							    '   ?publicationUri  dc:title ?publicationName.  }' +
+							    '   ?publicationUri  dc:title ?publicationName. ' +
+							    ' } UNION { ?roleUri  swc:heldBy <'+parameters.uri+'>. '+ 
+							    '   ?roleUri  swc:isRoleAt ?eventUri. ' +
+							    '	?eventUri  ical:summary ?eventName. }' +
 							    '}';
 				var  ajaxData = { query : prefix + query, output : "json" };
 		      	return ajaxData; 
@@ -516,7 +570,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 					// }
 
 					JSONToken.organizations = [];
-					JSONToken.roles = [];
+					JSONToken.roles = {};
 					JSONToken.publications = [];
 					j = 0;
 					k = 0;
@@ -531,8 +585,11 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 							k++;
 						}
 						if(token.hasOwnProperty("roleUri")){
-							JSONToken.keywords[k]=  token;
-							l++;
+							if(!JSONToken.roles[token.roleUri.value]){
+								
+								JSONToken.roles[token.roleUri.value] = [];
+							}
+					    	JSONToken.roles[token.roleUri.value].push(token);
 						}
 					});
 
@@ -548,7 +605,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 					if(_.size(parameters.JSONdata) > 0 ){
 						if(parameters.mode == "text"){
 							if(parameters.JSONdata.image){
-								parameters.contentEl.append($('<img src="'+parameters.JSONdata.image+'"/>'));    
+								parameters.contentEl.append($('<div style="min-height:50px; width:30%"><img style="width:100%;height:auto;" src="'+parameters.JSONdata.image+'"/></div>'));    
 							}
 							if(parameters.JSONdata.name){
 								$("[data-role = page]").find("#DataConf").html(parameters.JSONdata.name);
@@ -566,19 +623,19 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 								parameters.contentEl.append($('<a href='+parameters.JSONdata.twitter+'>'+parameters.JSONdata.twitter+'</a>'));    
 							}
 							if(parameters.JSONdata.roles) {
+								
 								for(var roleType in parameters.JSONdata.roles){
-									parameters.JSONdata.roles[roleType];
-									parameters.contentEl.append($('<h2>'+roleType+' at </h2>'));
-									ViewAdapterText.appendList(parameters.JSONdata.roles[roleType],
-													 {baseHref:'#event/',
-													  hrefCllbck:function(str){return Encoder.encode(str["name"])+"/"+Encoder.encode(str["id"])},
-													  },
-													 "name",
-													 parameters.contentEl,
-													 {type:"Node",labelCllbck:function(str){return "person : "+str["id"];}});
+										parameters.JSONdata.roles[roleType];
+										parameters.contentEl.append($('<h2>'+roleType+' at </h2>'));
+										ViewAdapterText.appendList(parameters.JSONdata.roles[roleType],
+														 {baseHref:'#event/',
+														  hrefCllbck:function(str){return Encoder.encode(str["eventName"])+"/"+Encoder.encode(str["eventUri"])},
+														  },
+														 "eventName",
+														 parameters.contentEl,
+														 {type:"Node",labelCllbck:function(str){return "person : "+str["eventUri"];}});
 								};
-							
-								parameters.contentEl.append($('<a href='+parameters.JSONdata.twitter+'>'+parameters.JSONdata.twitter+'</a>'));    
+
 							}
 
 							if(parameters.JSONdata.publications.length > 0){
@@ -599,6 +656,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 									ViewAdapterText.appendButton(parameters.contentEl,'#organization/'+Encoder.encode(organization.organizationName.value)+'/'+Encoder.encode(organization.organizationUri.value), organization.organizationName.value,{tiny : true});
 								};
 							}
+
 
 						}
 					}
@@ -1030,68 +1088,139 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 	    getConferenceEvent : {
 		    dataType : "JSONP",
 		    method : "GET",
-		    serviceUri : "schedule_event.jsonp?", 
+		    serviceUri : "", 
 		    getQuery : function(parameters){	
-		    
-			  var conference = parameters.conference;
-		      var ajaxData = { id : conference.eventId };
-		      return ajaxData; 
+		        var prefix =	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>         ' +
+							    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>               ' +
+							    'PREFIX dc: <http://purl.org/dc/elements/1.1/>                      ' +
+							    'PREFIX ical: <http://www.w3.org/2002/12/cal/ical#> 				' +
+							    'PREFIX swrc: <http://swrc.ontoware.org/ontology#>                  ' +
+							    'PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		        ' ;
+							
+			    var query  =	'SELECT DISTINCT  ?eventSummary ?eventStart ?eventEnd ?eventDesc ?eventComent ?eventUrl ?eventContact ?locationUri ?locationName ?subEventSummary ?subEventUri ?roleUri ?subEventUri ?personUri ?personName WHERE  {  ' +
+							    ' { <'+parameters.uri+'>  ical:summary ?eventSummary. ' +
+							    '	OPTIONAL {<'+parameters.uri+'>  ical:dtstart ?eventStart.}' +
+							    '	OPTIONAL {<'+parameters.uri+'>  ical:dtend ?eventEnd.}' +
+							    '	OPTIONAL {<'+parameters.uri+'>  ical:description ?eventDesc.}' +
+							    '	OPTIONAL {<'+parameters.uri+'>  ical:comment ?eventComent.}' +
+							    '	OPTIONAL {<'+parameters.uri+'>  ical:url ?eventUrl.}' +
+							    '	OPTIONAL {<'+parameters.uri+'>  ical:contact ?eventContact.}' +
+							    ' } UNION {	<'+parameters.uri+'>  swc:hasLocation ?locationUri. '+ 
+							    '   ?locationUri  rdfs:label ?locationName. ' +
+							    ' }' +
+							    '}';
+				var  ajaxData = { query : prefix + query, output : "json" };
+		      	return ajaxData; 
+			      
 			     
 		    },
-		    
 		    ModelCallBack : function(dataJSON,conferenceUri,datasourceUri, currentUri){
-				var JSONfile = {}; 
-			    if(_.size(dataJSON) > 0 ){
-				 	var dataJSON=dataJSON[0];
-				  	console.log(dataJSON);
-					JSONfile.eventLabel = dataJSON.name || null;
-					JSONfile.eventDescription =  dataJSON.description|| null;
-					JSONfile.eventAbstract =  dataJSON.comment || null;
-					JSONfile.eventUrl =  dataJSON.url || null;
-					JSONfile.eventStart = dataJSON.start_at || null;
-					JSONfile.eventEnd = dataJSON.end_at || null;
-					JSONfile.eventLocationName =  dataJSON.location.name || null;
-					JSONfile.eventThemes =  dataJSON.themes|| null;
+			 	var JSONfile = {}; 
+			 	var results = dataJSON.results.bindings;
+			    if(_.size(results) > 0 ){
+				
+					var JSONToken = {};
+					JSONfile.eventLabel = results[0].eventSummary ? results[0].eventSummary.value : null;
+					JSONfile.eventDescription =   results[0].eventDesc ? results[0].eventDesc.value : null;
+					JSONfile.eventAbstract =   results[0].eventComent ? results[0].eventComent.value : null;
+					JSONfile.eventHomepage =  results[0].eventUrl ? results[0].eventUrl.value : null;
+					JSONfile.eventStart = results[0].eventStart ? results[0].eventStart.value : null;
+					JSONfile.eventEnd = results[0].eventEnd ? results[0].eventEnd.value : null;
+
+					JSONfile.roles = [];
+					JSONfile.locations = [];
+					j = 0;
+					k = 0;
+
+					$.each(results, function(i, token) {
+						if(token.hasOwnProperty("roleUri")){
+							JSONfile.roles[j] =  token;
+							j++;
+						} 
+						if(token.hasOwnProperty("locationUri")){
+							JSONfile.locations[m] =  token;
+							k++;
+						}
+
+					});
 				}
+
 				StorageManager.pushCommandToStorage(currentUri,"getConferenceEvent",JSONfile);
 				return JSONfile;
 				
-			},
-				
+			}, 
+		    
+		    
 			ViewCallBack : function(parameters){
 				var JSONdata = parameters.JSONdata;
+				var conferenceUri = parameters.conferenceUri;
+
 				if(parameters.JSONdata != null){
-					var eventInfo = parameters.JSONdata;	
+					
+					var eventInfo = parameters.JSONdata;
+						
 					if(_.size(eventInfo) > 0 ){
-						if(JSONdata.eventDescription){ 
-							parameters.contentEl.append($('<h2>Description</h2>')); 
-							parameters.contentEl.append($('<p>'+JSONdata.eventDescription+'</p>'));   
-						}
-						if(JSONdata.eventAbstract){ 
-							parameters.contentEl.append($('<h2>Abstract</h2>')); 
-							parameters.contentEl.append($('<p>'+JSONdata.eventAbstract+'</p>'));   
-						}
-						if(JSONdata.eventUrl){ 
-							parameters.contentEl.append($('<h2>Homepage</h2>')); 
-							parameters.contentEl.append($('<a href="'+JSONdata.eventUrl+'">'+JSONdata.eventUrl+'</p>'));   
-						}
-						if(JSONdata.eventStart){ 
-							parameters.contentEl.append($('<h2>Starts at :  <span class="inline">'+moment(JSONdata.eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</span></h2>'));
-							isDefined = true;
-						}
-						if(JSONdata.eventEnd){
-							parameters.contentEl.append($('<h2>Ends at : <span class="inline">'+moment(JSONdata.eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</span></h2>'));  
-						} 
-						if(JSONdata.locationName){ 
-							parameters.contentEl.append($('<h2>Location : <a href="#schedule/'+Encoder.encode(JSONdata.locationName)+'" data-role="button" data-icon="search" data-inline="true">'+JSONdata.locationName+'</a></h2>'));
-						}
-						if(JSONdata.eventLabel){ 
-							$("[data-role = page]").find("#DataConf").html(JSONdata.eventLabel);
+						if(parameters.mode == "text"){
+						
+							if(eventInfo.eventLabel){ 
+								$("[data-role = page]").find("#DataConf").html(eventInfo.eventLabel);
+							}
+							if(eventInfo.eventDescription){ 
+								parameters.contentEl.append($('<h2>Description</h2>')); 
+								parameters.contentEl.append($('<p>'+eventInfo.eventDescription+'</p>'));   
+							}
+							if(eventInfo.eventAbstract){ 
+								parameters.contentEl.append($('<h2>Abstract</h2>')); 
+								parameters.contentEl.append($('<p>'+eventInfo.eventAbstract+'</p>'));   
+							}
+							if(eventInfo.eventHomepage){ 
+								parameters.contentEl.append($('<h2>Homepage</h2>')); 
+								parameters.contentEl.append($('<a href="'+eventInfo.eventHomepage+'">'+eventInfo.eventHomepage+'</p>'));   
+							}
+							if(eventInfo.eventStart){ 
+								parameters.contentEl.append($('<h2>Starts at :  <span class="inline">'+moment(eventInfo.eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</span></h2>'));
+								isDefined = true;
+							}
+							if(eventInfo.eventEnd){
+								parameters.contentEl.append($('<h2>Ends at : <span class="inline">'+moment(eventInfo.eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</span></h2>'));  
+							} 
+						
+						
+
+							// if(eventInfo.eventThemes && eventInfo.eventThemes.length>0){
+							// 	parameters.contentEl.append('<h2>Themes</h2>'); 
+							// 	$.each(eventInfo.eventThemes, function(i,theme){
+							// 		ViewAdapterText.appendButton(parameters.contentEl,'#topic/'+Encoder.encode(theme.name)+"/"+Encoder.encode(theme.id),theme.name,{tiny : 'true'});
+							// 	});
+							// }
+
+							// if(_.size(parameters.JSONdata.authors) > 0 ){
+							// 	parameters.contentEl.append($('<h2>Authors</h2>'));
+							// 	for(var i = 0; i < parameters.JSONdata.authors.length; i++){ 
+							// 		var author = parameters.JSONdata.authors[i];
+							// 		ViewAdapterText.appendButton(parameters.contentEl,'#person/'+Encoder.encode(author.authorName.value)+'/'+Encoder.encode(author.authorUri.value), author.authorName.value,{tiny : true});
+							// 	};
+							// }
+
+						
+						
+							if(_.size(parameters.JSONdata.locations) > 0 ){
+								parameters.contentEl.append($('<h2>Location</h2>'));
+								for(var i = 0; i < parameters.JSONdata.locations.length; i++){ 
+									var location = parameters.JSONdata.locations[i];
+									ViewAdapterText.appendButton(parameters.contentEl,'#schedule/'+Encoder.encode(location.locationName.value)+'/'+Encoder.encode(location.locationUri.value),location.locationName.value, {tiny : true});
+								};
+							}
+
+
+						
 						}
 					}
 				}
 			}
 	    },
+
+
 	    /** Command used to get and display the name, the start and end time and location of a given event  **/ 
 	    getEvent : {
 		    dataType : "JSONP",
@@ -1245,7 +1374,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 								parameters.contentEl.append($('<h2>Location</h2>'));
 								for(var i = 0; i < parameters.JSONdata.locations.length; i++){ 
 									var location = parameters.JSONdata.locations[i];
-									ViewAdapterText.appendButton(parameters.contentEl,'#schedule/'+Encoder.encode(location.locationName.value)+'/'+Encoder.encode(location.locationUri.value),location.locationName.value, {tiny : true});
+									ViewAdapterText.appendButton(parameters.contentEl,'#schedule/'+Encoder.encode(location.locationName.value),location.locationName.value, {tiny : true});
 								};
 							}
 
