@@ -278,6 +278,7 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					"commands" : [
 					]
 				},
+				
 				"Persons" : {
 					"hash" : "persons",
 					"view" : "persons",
@@ -296,13 +297,14 @@ define(['model/SWDFCommandStore', 'model/DBLPCommandStore', 'model/DDGoCommandSt
 					"graphView" : "no",
 					"title": "person",
 					"commands" : [
-						{
-							"datasource" : "GoogleDataSource",
-							"name" : "getAuthorPersonalPage",
-						},
+						
 						{
 							"datasource" : "eventDatasource",
 							"name" : "getPerson",
+						},
+						{
+							"datasource" : "GoogleDataSource",
+							"name" : "getAuthorPersonalPage",
 						},
 						{
 							"datasource" : "eventDatasource",
