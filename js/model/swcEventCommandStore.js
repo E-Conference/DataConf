@@ -110,7 +110,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 					JSONfile[i] = JSONToken;
 				});
 				console.log(JSONfile);
-				StorageManager.pushCommandToStorage(currentUri,"getAllEvents",JSONfile);
+				StorageManager.pushCommandToStorage(currentUri,"getAllLocations",JSONfile);
 				return JSONfile;
 			},
 				
@@ -1232,7 +1232,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 				var query = ""; 
 				//Encapsulating query in json object to return it
 				
-					var  ajaxData = {"after" : new Date()};
+					var  ajaxData = {conference_id : parameters.conference.id, "after" : new Date()};
 				
 				return ajaxData;
 			},
