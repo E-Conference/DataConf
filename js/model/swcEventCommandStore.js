@@ -1248,8 +1248,9 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 				//Building sparql query with prefix
 				var query = ""; 
 				//Encapsulating query in json object to return it
-				
-					var  ajaxData = {conference_id : parameters.conference.id, "after" : moment().format('ddd MMMM D YYYY HH:mm:ss ZZ')};
+				var date = moment();
+				date.lang('en');
+				var ajaxData = {conference_id: parameters.conference.id, "after": date.format('ddd MMMM D YYYY HH:mm:ss ZZ')};
 				
 				return ajaxData;
 			},
