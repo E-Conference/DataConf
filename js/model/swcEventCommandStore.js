@@ -1251,7 +1251,6 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 				var date = moment();
 				date.lang('en');
 				var ajaxData = {conference_id: parameters.conference.id, "after": date.format('ddd MMMM D YYYY HH:mm:ss ZZ')};
-				
 				return ajaxData;
 			},
 			//Declaring the callback function to use when sending the command
