@@ -505,7 +505,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 							if(parameters.JSONdata.roles) {
 								for(var roleType in parameters.JSONdata.roles){
 									parameters.JSONdata.roles[roleType];
-									parameters.contentEl.append($('<h2>'+labels[parameters.conference.lang].role[roleName]+' at </h2>'));
+									parameters.contentEl.append($('<h2>'+labels[parameters.conference.lang].role[roleType]+' at </h2>'));
 									ViewAdapterText.appendList(parameters.JSONdata.roles[roleType],
 													 {baseHref:'#event/',
 													  hrefCllbck:function(str){return Encoder.encode(str["name"])+"/"+Encoder.encode(str["id"])}
