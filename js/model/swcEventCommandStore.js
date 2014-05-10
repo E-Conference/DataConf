@@ -1249,7 +1249,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 				var query = ""; 
 				//Encapsulating query in json object to return it
 				
-					var  ajaxData = {conference_id : parameters.conference.id, "after" : new Date()};
+					var  ajaxData = {conference_id : parameters.conference.id, "after" : moment().format('ddd MMMM D YYYY HH:mm:ss ZZ')};
 				
 				return ajaxData;
 			},
