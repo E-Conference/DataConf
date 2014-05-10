@@ -1082,7 +1082,7 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 									}
 								});
 								$.each(eventInfo.eventRoles, function(i,role){
-									ViewAdapterText.appendButton($('#'+role.type),'#person/'+Encoder.encode(role.person.name)+"/"+Encoder.encode(role.person.name.id),role.person.name,{tiny : 'true'});
+									ViewAdapterText.appendButton($('#'+role.type),'#person/'+Encoder.encode(role.person.name)+"/"+Encoder.encode(role.person.id),role.person.name,{tiny : 'true'});
 								});
 							}
 						}
