@@ -620,22 +620,36 @@ define(['jquery', 'underscore', 'encoder','view/ViewAdapter', 'view/ViewAdapterT
 				return JSONfile;
 			},
 				
-			ViewCallBack : function(parameters){
-				if(parameters.JSONdata != null){
-					if(_.size(parameters.JSONdata) > 0 ){
-						if(parameters.mode == "text"){
-							$("[data-role = page]").find("#header-title").html(labels[parameters.conference.lang].role[parameters.uri]);
-							ViewAdapterText.appendListImage(parameters.JSONdata,
-													 {baseHref:'#person/',
-													  hrefCllbck:function(str){return Encoder.encode(str["name"])+"/"+Encoder.encode(str["id"])}
-                           },
-													 "name",
-													 "image",
-													 parameters.contentEl,
-													 {type:"Node",labelCllbck:function(str){return "person : "+str["id"];}});
-						}
+			ViewCallBack: function (parameters)
+			{
+				if (parameters.JSONdata != null)
+				{
+				  if (_.size(parameters.JSONdata) > 0)
+				  {
+					if (parameters.mode == "text")
+					{
+					  $("[data-role = page]").find("#header-title").html(labels[parameters.conference.lang].role[parameters.uri]);
+					  ViewAdapterText.appendListImage(parameters.JSONdata,
+						  {baseHref: '#person/',
+							hrefCllbck: function (str)
+							{
+							  return Encoder.encode(str["name"]) + "/" + Encoder.encode(str["id"])
+							}
+						  },
+						  "name",
+						  "image",
+						  parameters.contentEl,
+						  {type: "Node", labelCllbck: function (str)
+						  {
+							return "person : " + str["id"];
+						  }});
 					}
-				} 
+				  }
+				  else
+				  {
+					parameters.contentEl.append($('<h2>' + labels[parameters.conference.lang].noResults + '</h2>'));
+				  }
+				}
 			}
 		},
 
